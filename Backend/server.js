@@ -12,6 +12,7 @@ const savedRoutes = require("./routes/saved");
 const notificationRoutes = require("./routes/notifications");
 const userRoutes = require("./routes/users");
 const blogRoutes = require("./routes/blog");
+const locationRoutes = require("./routes/locations");
 
 
 
@@ -34,6 +35,7 @@ app.use("/api/saved", savedRoutes);
 app.use("/api/notifications", notificationRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/blogs", blogRoutes);
+app.use("/api/locations", locationRoutes);
 
 
 // Start the server

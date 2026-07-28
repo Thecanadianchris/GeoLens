@@ -2,13 +2,11 @@ const { Model, DataTypes, Sequelize } = require("sequelize");
 
 const sequelize = require("../config/connection");
 
-class Photo extends Model {}
+class Location extends Model {}
 
-
-Photo.init(
+// Initialize Location model
+Location.init(
   {
-
-
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -17,7 +15,19 @@ Photo.init(
     },
 
 
-    title: {
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+
+
+    county: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+
+
+    category: {
       type: DataTypes.STRING,
       allowNull: false,
     },
@@ -28,55 +38,27 @@ Photo.init(
     },
 
 
-    location: {
-      type: DataTypes.STRING,
-    },
-
-
-    category: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-
-
-    cameraDetails: {
-      type: DataTypes.STRING,
-    },
-
-    weatherCondition: {
-      type: DataTypes.STRING,
-    },
-
-
-    weatherRating: {
-      type: DataTypes.INTEGER,
-    },
-
-
     latitude: {
       type: DataTypes.FLOAT,
+      allowNull: false,
     },
 
 
     longitude: {
       type: DataTypes.FLOAT,
-    },
-
-
-    imageUrl: {
-      type: DataTypes.STRING,
       allowNull: false,
     },
 
 
-    locationId: {
+    photographyScore: {
       type: DataTypes.INTEGER,
+      defaultValue: 0,
     },
 
 
-    userId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
+    rating: {
+      type: DataTypes.FLOAT,
+      defaultValue: 0,
     },
 
 
@@ -85,18 +67,16 @@ Photo.init(
       allowNull: false,
       defaultValue: Sequelize.NOW,
     },
+
+    
   },
-
-
-
-
   {
     sequelize,
     timestamps: false,
     freezeTableName: true,
     underscored: true,
-    modelName: "photo",
+    modelName: "location",
   }
 );
 
-module.exports = Photo;
+module.exports = Location;
