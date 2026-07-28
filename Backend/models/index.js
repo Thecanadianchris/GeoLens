@@ -2,6 +2,10 @@ const User = require("./User");
 const Photo = require("./Photo");
 const Comment = require("./Comment");
 const Like = require("./Like");
+const Follow = require("./Follow");
+const SavedPhoto = require("./SavedPhoto");
+const Notification = require("./Notification");
+const Blog = require("./Blog");
 
 
 User.hasMany(Photo, { foreignKey: "userId", onDelete: "CASCADE" });
@@ -19,5 +23,44 @@ Like.belongsTo(User, { foreignKey: "userId" });
 Photo.hasMany(Like, { foreignKey: "photoId", onDelete: "CASCADE" });
 Like.belongsTo(Photo, { foreignKey: "photoId" });
 
-module.exports = { User, Photo, Comment, Like };
+
+
+// Follow relationships
+User.hasMany(Follow, { foreignKey: "followerId", onDelete: "CASCADE", as: "following" });
+User.hasMany(Follow, { foreignKey: "followingId", onDelete: "CASCADE", as: "followers" });
+Follow.belongsTo(User, { foreignKey: "followerId", as: "follower" });
+Follow.belongsTo(User, { foreignKey: "followingId", as: "followingUser" });
+
+
+
+
+// SavedPhoto relationships
+User.hasMany(SavedPhoto, { foreignKey: "userId", onDelete: "CASCADE" });
+SavedPhoto.belongsTo(User, { foreignKey: "userId" });
+Photo.hasMany(SavedPhoto, { foreignKey: "photoId", onDelete: "CASCADE" });
+SavedPhoto.belongsTo(Photo, { foreignKey: "photoId" });
+
+
+
+
+// Notification relationships
+User.hasMany(Notification, { foreignKey: "fromUserId", onDelete: "CASCADE", as: "sentNotifications" });
+User.hasMany(Notification, { foreignKey: "toUserId", onDelete: "CASCADE", as: "receivedNotifications" });
+Notification.belongsTo(User, { foreignKey: "fromUserId", as: "fromUser" });
+Notification.belongsTo(User, { foreignKey: "toUserId", as: "toUser" });
+Photo.hasMany(Notification, { foreignKey: "photoId", onDelete: "CASCADE" });
+Notification.belongsTo(Photo, { foreignKey: "photoId" });
+
+
+
+
+
+// Blog relationships
+User.hasMany(Blog, { foreignKey: "userId", onDelete: "CASCADE" });
+Blog.belongsTo(User, { foreignKey: "userId" });
+
+Photo.hasOne(Blog, { foreignKey: "photoId", onDelete: "CASCADE" });
+Blog.belongsTo(Photo, { foreignKey: "photoId" });
+
+module.exports = { User, Photo, Comment, Like, Follow, SavedPhoto, Notification, Blog };
 
