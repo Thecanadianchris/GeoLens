@@ -41,7 +41,32 @@ User.init(
       allowNull: false,
       defaultValue: Sequelize.NOW,
     },
+  
+
+    role: {
+      type: DataTypes.ENUM("visitor", "member", "admin"),
+      allowNull: false,
+      defaultValue: "member",
+    },
+
+    profilePhoto: {
+      type: DataTypes.STRING,
+    },
+
+    title: {
+      type: DataTypes.STRING,
+    },
+
+    location: {
+      type: DataTypes.STRING,
+    },
+
+    bio: {
+      type: DataTypes.TEXT,
+    },
   },
+
+  
   {
     sequelize,
     timestamps: false,

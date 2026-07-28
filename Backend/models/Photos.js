@@ -43,6 +43,25 @@ Photo.init(
       type: DataTypes.STRING,
     },
 
+    weatherCondition: {
+      type: DataTypes.STRING,
+    },
+
+
+    weatherRating: {
+      type: DataTypes.INTEGER,
+    },
+
+
+    latitude: {
+      type: DataTypes.FLOAT,
+    },
+
+
+    longitude: {
+      type: DataTypes.FLOAT,
+    },
+
 
     imageUrl: {
       type: DataTypes.STRING,
