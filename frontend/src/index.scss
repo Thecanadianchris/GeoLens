@@ -109,3 +109,122 @@ code {
   padding: 4px 8px;
   background: var(--code-bg);
 }
+
+
+@use "./styles/variables" as *;
+
+// Reset
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: $font;
+  color: $black;
+  background: $white;
+  -webkit-font-smoothing: antialiased;
+}
+
+// Page wrapper - keeps everything centred and phone width
+.page {
+  max-width: $max-width;
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: $space-xl $space-lg;
+  display: flex;
+  flex-direction: column;
+}
+
+// Forms
+.field {
+  margin-bottom: $space-md;
+
+  label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 600;
+    margin-bottom: $space-sm;
+  }
+
+  input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid $grey-300;
+    border-radius: $radius;
+    font-size: 1rem;
+    font-family: $font;
+
+    &:focus {
+      outline: none;
+      border-color: $black;
+    }
+
+    &::placeholder {
+      color: $grey-500;
+    }
+  }
+}
+
+.error {
+  color: $error;
+  font-size: 0.8125rem;
+  margin-top: $space-sm;
+}
+
+// Buttons
+.btn {
+  width: 100%;
+  padding: 0.875rem;
+  border-radius: $radius;
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: $font;
+  cursor: pointer;
+  border: 1px solid $black;
+
+  &--primary {
+    background: $black;
+    color: $white;
+  }
+
+  &--secondary {
+    background: $white;
+    color: $black;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+// The "OR" divider
+.divider {
+  display: flex;
+  align-items: center;
+  gap: $space-md;
+  margin: $space-lg 0;
+  color: $grey-500;
+  font-size: 0.75rem;
+
+  &::before,
+  &::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: $grey-300;
+  }
+}
+
+// Links
+a {
+  color: $black;
+}
+
+.text-link {
+  font-size: 0.875rem;
+  text-align: center;
+  display: block;
+}
