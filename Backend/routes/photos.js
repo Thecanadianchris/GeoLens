@@ -3,25 +3,31 @@ const multer = require("multer");
 const path = require("path");
 const { Op } = require("sequelize");
 const verifyToken = require("../middleware/auth");
+const supabase = require("../config/supabase");
 const { Photo, User } = require("../models/index");
 
-
-// Set up multer to save images in the uploads folder
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "uploads/");
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname));
-  },
-});
-
-const upload = multer({ storage });
+// Keep the uploaded file in memory so we can send it to Supabase
+const upload = multer({ storage: multer.memoryStorage() });
 
 // Route to add a new photo
 app.post("/", verifyToken, upload.single("image"), async (req, res) => {
   try {
     const { title, description, location, category, cameraDetails, weatherCondition, weatherRating, latitude, longitude } = req.body;
+
+    // Upload the image to Supabase Storage
+    const fileName = Date.now() + path.extname(req.file.originalname);
+
+    const { error } = await supabase.storage
+      .from("photos")
+      .upload(fileName, req.file.buffer, { contentType: req.file.mimetype });
+
+    if (error) {
+      console.log(error);
+      return res.status(500).json({ error: "Error uploading image" });
+    }
+
+    // Get the public link for the image
+    const { data } = supabase.storage.from("photos").getPublicUrl(fileName);
 
     const photo = await Photo.create({
       title,
@@ -33,7 +39,7 @@ app.post("/", verifyToken, upload.single("image"), async (req, res) => {
       weatherRating,
       latitude,
       longitude,
-      imageUrl: req.file.filename,
+      imageUrl: data.publicUrl,
       userId: req.userId,
     });
 
@@ -133,18 +139,28 @@ app.put("/:id", verifyToken, async (req, res) => {
     res.json(photo);
   } catch (error) {
     console.log(error);
-    res.status(500).json({ error: "Error updating photo" });
+    res.status(500).json({ error: "Error deleting photo" });
   }
 });
 
 // Route to delete a photo
 app.delete("/:id", verifyToken, async (req, res) => {
   try {
-    const photo = await Photo.destroy({
+    const photo = await Photo.findOne({
       where: { id: req.params.id, userId: req.userId },
     });
 
-    res.json(photo);
+    if (!photo) {
+      return res.status(404).json({ error: "Photo not found" });
+    }
+
+    // Remove the image from Supabase Storage
+    const fileName = photo.imageUrl.split("/").pop();
+    await supabase.storage.from("photos").remove([fileName]);
+
+    await photo.destroy();
+
+    res.json({ message: "Photo deleted successfully" });
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: "Error deleting photo" });
