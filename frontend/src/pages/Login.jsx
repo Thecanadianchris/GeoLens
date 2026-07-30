@@ -21,7 +21,7 @@ function Login() {
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("userId", response.data.userId);
 
-      navigate("/");
+      navigate("/home");
     } catch (error) {
       console.log(error);
       setServerError(error.response?.data?.error || "Something went wrong");
