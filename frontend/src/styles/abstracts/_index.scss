@@ -1,0 +1,5 @@
+// Forwards everything in abstracts/ so other partials can do:
+//   @use "../abstracts" as *;
+@forward "variables";
+@forward "functions";
+@forward "mixins";

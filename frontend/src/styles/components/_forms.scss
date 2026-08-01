@@ -1,0 +1,41 @@
+@use "../abstracts" as *;
+
+// ==========================================================================
+// Forms
+// ==========================================================================
+
+
+.field {
+  margin-bottom: $space-md;
+
+  label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 600;
+    margin-bottom: $space-sm;
+  }
+
+  input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid $grey-300;
+    border-radius: $radius;
+    font-size: 1rem;
+    font-family: $font;
+
+    &:focus {
+      outline: none;
+      border-color: $black;
+    }
+
+    &::placeholder {
+      color: $grey-500;
+    }
+  }
+}
+
+.error {
+  color: $error;
+  font-size: 0.8125rem;
+  margin-top: $space-sm;
+}

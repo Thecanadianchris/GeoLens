@@ -1,0 +1,28 @@
+@use "sass:math";
+@use "sass:map";
+@use "variables" as *;
+
+// ==========================================================================
+// Functions
+// ==========================================================================
+
+// Get a value from the $spacers map
+// Usage: padding: spacer(3);
+@function spacer($key) {
+  @if map.has-key($spacers, $key) {
+    @return map.get($spacers, $key);
+  }
+  @warn "Unknown spacer key: #{$key}";
+  @return null;
+}
+
+// Convert px to rem (base 16px)
+// Usage: font-size: px-to-rem(18px);
+@function px-to-rem($px, $base: 16px) {
+  @return math.div($px, $base) * 1rem;
+}
+
+// Strip units from a value
+@function strip-unit($value) {
+  @return math.div($value, ($value * 0 + 1));
+}
