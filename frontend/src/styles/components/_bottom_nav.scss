@@ -1,0 +1,29 @@
+@use "../abstracts" as *;
+
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  @include flex(row, space-around, center);
+  background: $color-white;
+  border-top: $border-width solid $color-gray-300;
+  padding: spacer(2) 0;
+  z-index: $z-index-fixed;
+
+  &__item {
+    @include flex(column, center, center);
+    gap: spacer(1);
+    text-decoration: none;
+    color: $color-gray-500;
+    font-size: $font-size-sm;
+
+    svg {
+      font-size: $font-size-xl;
+    }
+
+    &.active {
+      color: $color-primary;
+    }
+  }
+}

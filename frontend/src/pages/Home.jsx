@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import BottomNav from "../components/BottomNav";
 
 function Home() {
   const navigate = useNavigate();
@@ -17,6 +18,8 @@ function Home() {
       <button type="button" className="btn btn--secondary" onClick={handleLogout}>
         Log out
       </button>
+
+      <BottomNav />
     </div>
   );
 }
