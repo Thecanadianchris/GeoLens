@@ -57,7 +57,7 @@ app.get("/", async (req, res) => {
     const where = {};
 
     if (search) {
-      where.title = { [Op.like]: `%${search}%` };
+      where.title = { [Op.iLike]: `%${search}%` };
     }
 
     if (category) {
@@ -65,7 +65,7 @@ app.get("/", async (req, res) => {
     }
 
     if (location) {
-      where.location = { [Op.like]: `%${location}%` };
+      where.location = { [Op.iLike]: `%${location}%` };
     }
 
     if (weather) {
@@ -131,17 +131,23 @@ app.put("/:id", verifyToken, async (req, res) => {
   try {
     const { title, description, location, category, cameraDetails, weatherCondition, weatherRating } = req.body;
 
-    const photo = await Photo.update(
+    await Photo.update(
       { title, description, location, category, cameraDetails, weatherCondition, weatherRating },
       { where: { id: req.params.id, userId: req.userId } }
     );
 
+    // fetch the updated photo so we return the real data, not just the affected row count
+    const photo = await Photo.findByPk(req.params.id, {
+      include: [{ model: User, attributes: ["id", "username"] }],
+    });
+
     res.json(photo);
   } catch (error) {
     console.log(error);
-    res.status(500).json({ error: "Error deleting photo" });
+    res.status(500).json({ error: "Error updating photo" });
   }
 });
+
 
 // Route to delete a photo
 app.delete("/:id", verifyToken, async (req, res) => {
@@ -166,5 +172,11 @@ app.delete("/:id", verifyToken, async (req, res) => {
     res.status(500).json({ error: "Error deleting photo" });
   }
 });
+
+
+
+
+
+
 
 module.exports = app;
