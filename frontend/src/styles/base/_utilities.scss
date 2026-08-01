@@ -1,0 +1,55 @@
+@use "../abstracts" as *;
+
+// ==========================================================================
+// Utilities
+// ==========================================================================
+
+.sr-only {
+  @include visually-hidden;
+}
+
+.text-center { text-align: center; }
+.text-left   { text-align: left; }
+.text-right  { text-align: right; }
+
+.text-truncate {
+  @include truncate(1);
+}
+
+.d-none  { display: none; }
+.d-block { display: block; }
+.d-flex  { display: flex; }
+
+.flex-center {
+  @include flex-center;
+}
+
+// Margin & padding utilities generated from the $spacers map
+@each $key, $value in $spacers {
+  .m-#{$key}  { margin: $value; }
+  .mt-#{$key} { margin-top: $value; }
+  .mb-#{$key} { margin-bottom: $value; }
+  .ml-#{$key} { margin-left: $value; }
+  .mr-#{$key} { margin-right: $value; }
+  .mx-#{$key} { margin-left: $value; margin-right: $value; }
+  .my-#{$key} { margin-top: $value; margin-bottom: $value; }
+
+  .p-#{$key}  { padding: $value; }
+  .pt-#{$key} { padding-top: $value; }
+  .pb-#{$key} { padding-bottom: $value; }
+  .pl-#{$key} { padding-left: $value; }
+  .pr-#{$key} { padding-right: $value; }
+  .px-#{$key} { padding-left: $value; padding-right: $value; }
+  .py-#{$key} { padding-top: $value; padding-bottom: $value; }
+}
+
+@each $name, $color in (
+  primary: $color-primary,
+  secondary: $color-secondary,
+  success: $color-success,
+  warning: $color-warning,
+  danger: $color-danger,
+) {
+  .text-#{$name} { color: $color; }
+  .bg-#{$name}   { background-color: $color; }
+}

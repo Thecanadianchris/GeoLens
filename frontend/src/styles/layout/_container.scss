@@ -1,0 +1,27 @@
+@use "../abstracts" as *;
+
+// ==========================================================================
+// Container
+// ==========================================================================
+
+// Page wrapper - keeps everything centred and phone width
+.page {
+  max-width: $max-width;
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: $space-xl $space-lg;
+  display: flex;
+  flex-direction: column;
+}
+
+.container {
+  width: 100%;
+  max-width: $container-max-width;
+  margin-inline: auto;
+  padding-inline: spacer(4);
+}
+
+.container-fluid {
+  width: 100%;
+  padding-inline: spacer(4);
+}

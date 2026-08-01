@@ -1,0 +1,31 @@
+// ==========================================================================
+// Main entry point
+// Compile this file only — partials pull in what they need via @use
+// ==========================================================================
+
+// 1. Abstracts (variables, functions, mixins — no CSS output on their own)
+@use "abstracts" as *;
+
+// 2. Vendors (third-party overrides, if any)
+// @use "vendors/normalize";
+
+// 3. Base (resets, global element styles, utilities)
+@use "base/reset";
+@use "base/typography";
+@use "base/utilities";
+
+// 4. Layout (structural page regions)
+@use "layout/container";
+@use "layout/header";
+@use "layout/footer";
+
+// 5. Components (reusable UI pieces)
+@use "components/buttons";
+@use "components/forms";
+@use "components/card";
+
+// 6. Pages (page-specific overrides)
+// @use "pages/home";
+
+// 7. Themes (optional alternate themes)
+// @use "themes/dark";

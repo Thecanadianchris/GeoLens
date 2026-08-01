@@ -1,0 +1,25 @@
+@use "../abstracts" as *;
+
+// ==========================================================================
+// Header
+// ==========================================================================
+
+.site-header {
+  @include flex(row, space-between, center);
+  padding-block: spacer(3);
+  border-bottom: $border-width solid $color-border;
+  background-color: $color-white;
+  position: sticky;
+  top: 0;
+  z-index: $z-index-sticky;
+
+  &__logo {
+    font-size: $font-size-xl;
+    font-weight: $font-weight-bold;
+  }
+
+  &__nav {
+    @include flex(row, flex-start, center);
+    gap: spacer(4);
+  }
+}

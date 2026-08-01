@@ -1,0 +1,18 @@
+@use "../abstracts" as *;
+
+// ==========================================================================
+// Footer
+// ==========================================================================
+
+.site-footer {
+  padding-block: spacer(5);
+  margin-top: auto;
+  border-top: $border-width solid $color-border;
+  color: $color-gray-500;
+  font-size: $font-size-sm;
+
+  &__content {
+    @include flex(row, space-between, center, wrap);
+    gap: spacer(3);
+  }
+}
