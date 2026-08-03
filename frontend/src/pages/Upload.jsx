@@ -18,6 +18,7 @@ const defaultIcon = L.icon({
 L.Marker.prototype.options.icon = defaultIcon;
 
 const categories = ["Coastal", "Landscape", "Urban", "Wildlife", "Night"];
+const OTHER_VALUE = "__other__";
 
 function Upload() {
   const [step, setStep] = useState(1);
@@ -27,8 +28,16 @@ function Upload() {
   const [category, setCategory] = useState("");
   const [locating, setLocating] = useState(false);
   const [weather, setWeather] = useState(null);
+
+  const [lensOptions, setLensOptions] = useState([]);
+  const [settingsOptions, setSettingsOptions] = useState([]);
   const [cameraLens, setCameraLens] = useState("");
   const [cameraSettings, setCameraSettings] = useState("");
+  const [showLensOther, setShowLensOther] = useState(false);
+  const [showSettingsOther, setShowSettingsOther] = useState(false);
+  const [customLensInput, setCustomLensInput] = useState("");
+  const [customSettingsInput, setCustomSettingsInput] = useState("");
+
   const [caption, setCaption] = useState("");
   const [publishing, setPublishing] = useState(false);
   const navigate = useNavigate();
@@ -63,6 +72,10 @@ function Upload() {
         },
         (error) => {
           console.log(error);
+          // Fall back to a default location (Durdle Door, Dorset) if GPS isn't available
+          const fallback = { lat: 50.6212, lng: -2.2761 };
+          setPosition(fallback);
+          reverseGeocode(fallback.lat, fallback.lng);
           setLocating(false);
         }
       );
@@ -84,11 +97,80 @@ function Upload() {
     }
   }, [step, position, weather]);
 
+  useEffect(() => {
+    if (step === 3) {
+      const fetchOptions = async () => {
+        try {
+          const [lensResponse, settingsResponse] = await Promise.all([
+            api.get("/camera-options/lens"),
+            api.get("/camera-options/settings"),
+          ]);
+          setLensOptions(lensResponse.data);
+          setSettingsOptions(settingsResponse.data);
+        } catch (error) {
+          console.log(error);
+        }
+      };
+
+      fetchOptions();
+    }
+  }, [step]);
+
   const handleMarkerDrag = (e) => {
     const marker = e.target;
     const newPosition = marker.getLatLng();
     setPosition({ lat: newPosition.lat, lng: newPosition.lng });
     reverseGeocode(newPosition.lat, newPosition.lng);
+  };
+
+  const handleLensChange = (e) => {
+    const value = e.target.value;
+    if (value === OTHER_VALUE) {
+      setShowLensOther(true);
+      setCameraLens("");
+    } else {
+      setShowLensOther(false);
+      setCameraLens(value);
+    }
+  };
+
+  const handleSettingsChange = (e) => {
+    const value = e.target.value;
+    if (value === OTHER_VALUE) {
+      setShowSettingsOther(true);
+      setCameraSettings("");
+    } else {
+      setShowSettingsOther(false);
+      setCameraSettings(value);
+    }
+  };
+
+  const handleAddLens = async () => {
+    if (!customLensInput.trim()) return;
+
+    try {
+      await api.post("/camera-options", { type: "lens", value: customLensInput });
+      setLensOptions((prev) => [...new Set([...prev, customLensInput])]);
+      setCameraLens(customLensInput);
+      setShowLensOther(false);
+      setCustomLensInput("");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleAddSettings = async () => {
+    if (!customSettingsInput.trim()) return;
+
+    try {
+      await api.post("/camera-options", { type: "settings", value: customSettingsInput });
+      setSettingsOptions((prev) => [...new Set([...prev, customSettingsInput])]);
+      setCameraSettings(customSettingsInput);
+      setShowSettingsOther(false);
+      setCustomSettingsInput("");
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handlePublish = async () => {
@@ -226,20 +308,64 @@ function Upload() {
           )}
 
           <p className="upload__section-title">Camera details</p>
-          <input
-            type="text"
-            className="upload__input"
-            placeholder="Camera / lens (e.g. Sony A7 IV · 24-70mm)"
-            value={cameraLens}
-            onChange={(e) => setCameraLens(e.target.value)}
-          />
-          <input
-            type="text"
-            className="upload__input"
-            placeholder="Settings (e.g. f/8 · 1/125 · ISO 100)"
-            value={cameraSettings}
-            onChange={(e) => setCameraSettings(e.target.value)}
-          />
+
+          <select className="upload__select" value={showLensOther ? OTHER_VALUE : cameraLens} onChange={handleLensChange}>
+            <option value="" disabled>
+              Select camera / lens
+            </option>
+            {lensOptions.map((option) => (
+              <option key={option} value={option}>
+                {option}
+              </option>
+            ))}
+            <option value={OTHER_VALUE}>Other (add new)</option>
+          </select>
+
+          {showLensOther && (
+            <div className="upload__other-row">
+              <input
+                type="text"
+                className="upload__input"
+                placeholder="Type new camera / lens"
+                value={customLensInput}
+                onChange={(e) => setCustomLensInput(e.target.value)}
+              />
+              <button type="button" className="upload__add-btn" onClick={handleAddLens}>
+                Add
+              </button>
+            </div>
+          )}
+
+          <select
+            className="upload__select"
+            value={showSettingsOther ? OTHER_VALUE : cameraSettings}
+            onChange={handleSettingsChange}
+          >
+            <option value="" disabled>
+              Select settings
+            </option>
+            {settingsOptions.map((option) => (
+              <option key={option} value={option}>
+                {option}
+              </option>
+            ))}
+            <option value={OTHER_VALUE}>Other (add new)</option>
+          </select>
+
+          {showSettingsOther && (
+            <div className="upload__other-row">
+              <input
+                type="text"
+                className="upload__input"
+                placeholder="Type new settings (e.g. f/8 · 1/125 · ISO 100)"
+                value={customSettingsInput}
+                onChange={(e) => setCustomSettingsInput(e.target.value)}
+              />
+              <button type="button" className="upload__add-btn" onClick={handleAddSettings}>
+                Add
+              </button>
+            </div>
+          )}
 
           <p className="upload__section-title">Photo caption (optional)</p>
           <textarea
