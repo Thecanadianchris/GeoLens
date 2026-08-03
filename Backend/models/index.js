@@ -8,6 +8,7 @@ const Notification = require("./Notification");
 const Blog = require("./Blog");
 const Location = require("./Location");
 const SavedLocation = require("./SavedLocation");
+const CameraOption = require("./CameraOption");
 
 User.hasMany(Photo, { foreignKey: "userId", onDelete: "CASCADE" });
 Photo.belongsTo(User, { foreignKey: "userId" });
@@ -62,4 +63,16 @@ SavedLocation.belongsTo(User, { foreignKey: "userId" });
 Location.hasMany(SavedLocation, { foreignKey: "locationId", onDelete: "CASCADE" });
 SavedLocation.belongsTo(Location, { foreignKey: "locationId" });
 
-module.exports = { User, Photo, Comment, Like, Follow, SavedPhoto, Notification, Blog, Location, SavedLocation };
+module.exports = {
+  User,
+  Photo,
+  Comment,
+  Like,
+  Follow,
+  SavedPhoto,
+  Notification,
+  Blog,
+  Location,
+  SavedLocation,
+  CameraOption,
+};

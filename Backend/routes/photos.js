@@ -12,7 +12,18 @@ const upload = multer({ storage: multer.memoryStorage() });
 // Route to add a new photo
 app.post("/", verifyToken, upload.single("image"), async (req, res) => {
   try {
-    const { title, description, location, category, cameraDetails, weatherCondition, weatherRating, latitude, longitude } = req.body;
+    const {
+      title,
+      description,
+      location,
+      category,
+      cameraDetails,
+      weatherCondition,
+      weatherRating,
+      latitude,
+      longitude,
+      dateTaken,
+    } = req.body;
 
     // Upload the image to Supabase Storage
     const fileName = Date.now() + path.extname(req.file.originalname);
@@ -39,6 +50,7 @@ app.post("/", verifyToken, upload.single("image"), async (req, res) => {
       weatherRating,
       latitude,
       longitude,
+      dateTaken,
       imageUrl: data.publicUrl,
       userId: req.userId,
     });
@@ -129,10 +141,19 @@ app.get("/:id", async (req, res) => {
 // Route to update a photo
 app.put("/:id", verifyToken, async (req, res) => {
   try {
-    const { title, description, location, category, cameraDetails, weatherCondition, weatherRating } = req.body;
+    const {
+      title,
+      description,
+      location,
+      category,
+      cameraDetails,
+      weatherCondition,
+      weatherRating,
+      dateTaken,
+    } = req.body;
 
     await Photo.update(
-      { title, description, location, category, cameraDetails, weatherCondition, weatherRating },
+      { title, description, location, category, cameraDetails, weatherCondition, weatherRating, dateTaken },
       { where: { id: req.params.id, userId: req.userId } }
     );
 
@@ -147,7 +168,6 @@ app.put("/:id", verifyToken, async (req, res) => {
     res.status(500).json({ error: "Error updating photo" });
   }
 });
-
 
 // Route to delete a photo
 app.delete("/:id", verifyToken, async (req, res) => {
@@ -172,11 +192,5 @@ app.delete("/:id", verifyToken, async (req, res) => {
     res.status(500).json({ error: "Error deleting photo" });
   }
 });
-
-
-
-
-
-
 
 module.exports = app;

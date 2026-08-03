@@ -28,6 +28,8 @@ function Upload() {
   const [category, setCategory] = useState("");
   const [locating, setLocating] = useState(false);
   const [weather, setWeather] = useState(null);
+  const [weatherLoading, setWeatherLoading] = useState(false);
+  const [photoDate, setPhotoDate] = useState(new Date().toISOString().split("T")[0]);
 
   const [lensOptions, setLensOptions] = useState([]);
   const [settingsOptions, setSettingsOptions] = useState([]);
@@ -72,7 +74,6 @@ function Upload() {
         },
         (error) => {
           console.log(error);
-          // Fall back to a default location (Durdle Door, Dorset) if GPS isn't available
           const fallback = { lat: 50.6212, lng: -2.2761 };
           setPosition(fallback);
           reverseGeocode(fallback.lat, fallback.lng);
@@ -83,19 +84,25 @@ function Upload() {
   }, [step, position]);
 
   useEffect(() => {
-    if (step === 3 && position && !weather) {
+    if (step === 3 && position && photoDate) {
       const fetchWeather = async () => {
+        setWeatherLoading(true);
         try {
-          const response = await api.get(`/weather?lat=${position.lat}&lon=${position.lng}`);
+          const response = await api.get(
+            `/weather?lat=${position.lat}&lon=${position.lng}&date=${photoDate}`
+          );
           setWeather(response.data);
         } catch (error) {
           console.log(error);
+          setWeather(null);
+        } finally {
+          setWeatherLoading(false);
         }
       };
 
       fetchWeather();
     }
-  }, [step, position, weather]);
+  }, [step, position, photoDate]);
 
   useEffect(() => {
     if (step === 3) {
@@ -191,6 +198,7 @@ function Upload() {
         formData.append("weatherRating", weather ? 90 : "");
         formData.append("latitude", position.lat);
         formData.append("longitude", position.lng);
+        formData.append("dateTaken", photoDate);
 
         await api.post("/photos", formData, {
           headers: { "Content-Type": "multipart/form-data" },
@@ -296,15 +304,25 @@ function Upload() {
 
       {step === 3 && (
         <>
+          <p className="upload__label">Date photo was taken</p>
+          <input
+            type="date"
+            className="upload__input"
+            value={photoDate}
+            onChange={(e) => setPhotoDate(e.target.value)}
+          />
+
           <p className="upload__section-title">Weather (auto-filled)</p>
-          {weather ? (
+          {weatherLoading && <p className="upload__label">Loading weather...</p>}
+          {!weatherLoading && weather && (
             <div className="upload__weather-grid">
               <div className="upload__weather-item">{weather.temperature}° {weather.condition}</div>
               <div className="upload__weather-item">Wind {weather.windSpeed} mph</div>
               <div className="upload__weather-item">Sunset {weather.sunset}</div>
             </div>
-          ) : (
-            <p className="upload__label">Loading weather...</p>
+          )}
+          {!weatherLoading && !weather && (
+            <p className="upload__label">No weather data available for this date.</p>
           )}
 
           <p className="upload__section-title">Camera details</p>

@@ -4,11 +4,8 @@ const sequelize = require("../config/connection");
 
 class Photo extends Model {}
 
-
 Photo.init(
   {
-
-
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -16,28 +13,23 @@ Photo.init(
       autoIncrement: true,
     },
 
-
     title: {
       type: DataTypes.STRING,
       allowNull: false,
     },
 
-
     description: {
       type: DataTypes.TEXT,
     },
-
 
     location: {
       type: DataTypes.STRING,
     },
 
-
     category: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-
 
     cameraDetails: {
       type: DataTypes.STRING,
@@ -47,38 +39,35 @@ Photo.init(
       type: DataTypes.STRING,
     },
 
-
     weatherRating: {
       type: DataTypes.INTEGER,
     },
-
 
     latitude: {
       type: DataTypes.FLOAT,
     },
 
-
     longitude: {
       type: DataTypes.FLOAT,
     },
 
+    dateTaken: {
+      type: DataTypes.DATEONLY,
+    },
 
     imageUrl: {
       type: DataTypes.STRING,
       allowNull: false,
     },
 
-
     locationId: {
       type: DataTypes.INTEGER,
     },
-
 
     userId: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-
 
     createdAt: {
       type: DataTypes.DATE,
@@ -86,9 +75,6 @@ Photo.init(
       defaultValue: Sequelize.NOW,
     },
   },
-
-
-
 
   {
     sequelize,

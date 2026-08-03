@@ -1,4 +1,4 @@
-require("dotenv").config(); 
+require("dotenv").config();
 
 const express = require("express");
 const cors = require("cors");
@@ -14,16 +14,14 @@ const userRoutes = require("./routes/users");
 const blogRoutes = require("./routes/blog");
 const locationRoutes = require("./routes/locations");
 const weatherRoutes = require("./routes/weather");
-
+const cameraOptionRoutes = require("./routes/cameraOptions");
 
 const app = express();
-
 
 // Middleware
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
 
 // Routes
 app.use("/api/auth", authRoutes);
@@ -37,6 +35,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/blogs", blogRoutes);
 app.use("/api/locations", locationRoutes);
 app.use("/api/weather", weatherRoutes);
+app.use("/api/camera-options", cameraOptionRoutes);
 
 // Start the server
 const PORT = process.env.PORT || 5000;
