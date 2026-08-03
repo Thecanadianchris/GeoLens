@@ -85,4 +85,3 @@ SavedLocation.belongsTo(Location, { foreignKey: "locationId" });
 
 module.exports = { User, Photo, Comment, Like, Follow, SavedPhoto, Notification, Blog, Location, SavedLocation };
 
-``
