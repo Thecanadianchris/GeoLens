@@ -24,25 +24,17 @@ Like.belongsTo(User, { foreignKey: "userId" });
 Photo.hasMany(Like, { foreignKey: "photoId", onDelete: "CASCADE" });
 Like.belongsTo(Photo, { foreignKey: "photoId" });
 
-
-
 // Follow relationships
 User.hasMany(Follow, { foreignKey: "followerId", onDelete: "CASCADE", as: "following" });
 User.hasMany(Follow, { foreignKey: "followingId", onDelete: "CASCADE", as: "followers" });
 Follow.belongsTo(User, { foreignKey: "followerId", as: "follower" });
 Follow.belongsTo(User, { foreignKey: "followingId", as: "followingUser" });
 
-
-
-
 // SavedPhoto relationships
 User.hasMany(SavedPhoto, { foreignKey: "userId", onDelete: "CASCADE" });
 SavedPhoto.belongsTo(User, { foreignKey: "userId" });
 Photo.hasMany(SavedPhoto, { foreignKey: "photoId", onDelete: "CASCADE" });
 SavedPhoto.belongsTo(Photo, { foreignKey: "photoId" });
-
-
-
 
 // Notification relationships
 User.hasMany(Notification, { foreignKey: "fromUserId", onDelete: "CASCADE", as: "sentNotifications" });
@@ -52,10 +44,6 @@ Notification.belongsTo(User, { foreignKey: "toUserId", as: "toUser" });
 Photo.hasMany(Notification, { foreignKey: "photoId", onDelete: "CASCADE" });
 Notification.belongsTo(Photo, { foreignKey: "photoId" });
 
-
-
-
-
 // Blog relationships
 User.hasMany(Blog, { foreignKey: "userId", onDelete: "CASCADE" });
 Blog.belongsTo(User, { foreignKey: "userId" });
@@ -63,14 +51,9 @@ Blog.belongsTo(User, { foreignKey: "userId" });
 Photo.hasOne(Blog, { foreignKey: "photoId", onDelete: "CASCADE" });
 Blog.belongsTo(Photo, { foreignKey: "photoId" });
 
-
-
-
 // Location and Photo
 Location.hasMany(Photo, { foreignKey: "locationId", onDelete: "SET NULL" });
 Photo.belongsTo(Location, { foreignKey: "locationId", as: "spot" });
-
-
 
 // Saved locations
 User.hasMany(SavedLocation, { foreignKey: "userId", onDelete: "CASCADE" });
@@ -79,9 +62,4 @@ SavedLocation.belongsTo(User, { foreignKey: "userId" });
 Location.hasMany(SavedLocation, { foreignKey: "locationId", onDelete: "CASCADE" });
 SavedLocation.belongsTo(Location, { foreignKey: "locationId" });
 
-
-
-
-
 module.exports = { User, Photo, Comment, Like, Follow, SavedPhoto, Notification, Blog, Location, SavedLocation };
-

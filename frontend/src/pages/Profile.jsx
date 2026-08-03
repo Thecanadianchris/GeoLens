@@ -65,7 +65,7 @@ function Profile() {
         <div>
           <p className="profile__username">@{user?.username}</p>
           <p className="profile__meta">
-            {user?.location || "No location set"} &middot; {user?.Photos?.length || 0} photos
+            {user?.location || "No location set"} &middot; {user?.photos?.length || 0} photos
           </p>
         </div>
       </div>
@@ -84,8 +84,10 @@ function Profile() {
 
       {activeTab === "portfolio" && (
         <div className="profile__grid">
-          {(user?.Photos?.length ? user.Photos : new Array(12).fill(null)).map((photo, index) => (
-            <div key={photo?.id ?? index} className="profile__grid-item" />
+          {(user?.photos?.length ? user.photos : new Array(12).fill(null)).map((photo, index) => (
+            <div key={photo?.id ?? index} className="profile__grid-item">
+              {photo?.imageUrl && <img src={photo.imageUrl} alt={photo.title || "Photo"} />}
+            </div>
           ))}
         </div>
       )}

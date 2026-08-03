@@ -13,7 +13,7 @@ const notificationRoutes = require("./routes/notifications");
 const userRoutes = require("./routes/users");
 const blogRoutes = require("./routes/blog");
 const locationRoutes = require("./routes/locations");
-
+const weatherRoutes = require("./routes/weather");
 
 
 const app = express();
@@ -36,7 +36,7 @@ app.use("/api/notifications", notificationRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/blogs", blogRoutes);
 app.use("/api/locations", locationRoutes);
-
+app.use("/api/weather", weatherRoutes);
 
 // Start the server
 const PORT = process.env.PORT || 5000;
