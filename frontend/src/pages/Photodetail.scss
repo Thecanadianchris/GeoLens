@@ -108,6 +108,39 @@
     }
   }
 
+  &__comment {
+    @include flex(row, space-between, flex-start);
+    gap: spacer(2);
+    padding: spacer(2) 0;
+    border-bottom: $border-width solid $color-gray-100;
+  }
+
+  &__comment-username {
+    font-size: $font-size-sm;
+    font-weight: $font-weight-semibold;
+  }
+
+  &__comment-text {
+    font-size: $font-size-sm;
+  }
+
+  &__comment-delete {
+    @include button-reset;
+    font-size: $font-size-sm;
+    color: $color-danger;
+    white-space: nowrap;
+  }
+
+  &__comment-form {
+    @include flex(row, flex-start, center);
+    gap: spacer(2);
+    margin-top: spacer(3);
+
+    .photo-detail__input {
+      margin-bottom: 0;
+    }
+  }
+
   &__form {
     display: flex;
     flex-direction: column;

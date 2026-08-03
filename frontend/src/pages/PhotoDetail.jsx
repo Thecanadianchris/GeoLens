@@ -38,6 +38,11 @@ function PhotoDetail() {
   const [isLiked, setIsLiked] = useState(false);
   const [likeLoading, setLikeLoading] = useState(false);
 
+  const [comments, setComments] = useState([]);
+  const [commentsLoading, setCommentsLoading] = useState(true);
+  const [commentText, setCommentText] = useState("");
+  const [postingComment, setPostingComment] = useState(false);
+
   const currentUserId = Number(localStorage.getItem("userId"));
   const isOwner = photo && photo.userId === currentUserId;
 
@@ -80,6 +85,22 @@ function PhotoDetail() {
 
     fetchLikes();
   }, [id, currentUserId]);
+
+  useEffect(() => {
+    const fetchComments = async () => {
+      setCommentsLoading(true);
+      try {
+        const response = await api.get(`/comments/photo/${id}`);
+        setComments(response.data);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setCommentsLoading(false);
+      }
+    };
+
+    fetchComments();
+  }, [id]);
 
   useEffect(() => {
     if (isEditing) {
@@ -139,6 +160,34 @@ function PhotoDetail() {
     }
 
     setLikeLoading(false);
+  };
+
+  const handlePostComment = async () => {
+    if (!commentText.trim()) return;
+
+    setPostingComment(true);
+
+    try {
+      const response = await api.post("/comments", { content: commentText, photoId: id });
+      setComments((prev) => [
+        ...prev,
+        { ...response.data, User: { id: currentUserId, username: "You" } },
+      ]);
+      setCommentText("");
+    } catch (error) {
+      console.log(error);
+    }
+
+    setPostingComment(false);
+  };
+
+  const handleDeleteComment = async (commentId) => {
+    try {
+      await api.delete(`/comments/${commentId}`);
+      setComments((prev) => prev.filter((comment) => comment.id !== commentId));
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleLensChange = (e) => {
@@ -312,6 +361,57 @@ function PhotoDetail() {
                 {deleting ? "Deleting..." : "Delete photo"}
               </button>
             )}
+          </div>
+
+          <div className="photo-detail__section">
+            <p className="photo-detail__section-title">
+              Comments {comments.length > 0 && `(${comments.length})`}
+            </p>
+
+            {commentsLoading && <p className="photo-detail__label">Loading comments...</p>}
+
+            {!commentsLoading && comments.length === 0 && (
+              <p className="photo-detail__label">No comments yet.</p>
+            )}
+
+            {!commentsLoading &&
+              comments.map((comment) => (
+                <div key={comment.id} className="photo-detail__comment">
+                  <div>
+                    <p className="photo-detail__comment-username">
+                      @{comment.User?.username || "user"}
+                    </p>
+                    <p className="photo-detail__comment-text">{comment.content}</p>
+                  </div>
+                  {comment.userId === currentUserId && (
+                    <button
+                      type="button"
+                      className="photo-detail__comment-delete"
+                      onClick={() => handleDeleteComment(comment.id)}
+                    >
+                      Delete
+                    </button>
+                  )}
+                </div>
+              ))}
+
+            <div className="photo-detail__comment-form">
+              <input
+                type="text"
+                className="photo-detail__input"
+                placeholder="Add a comment..."
+                value={commentText}
+                onChange={(e) => setCommentText(e.target.value)}
+              />
+              <button
+                type="button"
+                className="photo-detail__add-btn"
+                onClick={handlePostComment}
+                disabled={postingComment}
+              >
+                {postingComment ? "..." : "Post"}
+              </button>
+            </div>
           </div>
         </>
       )}
