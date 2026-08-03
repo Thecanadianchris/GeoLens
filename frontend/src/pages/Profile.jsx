@@ -85,8 +85,15 @@ function Profile() {
       {activeTab === "portfolio" && (
         <div className="profile__grid">
           {(user?.photos?.length ? user.photos : new Array(12).fill(null)).map((photo, index) => (
-            <div key={photo?.id ?? index} className="profile__grid-item">
-              {photo?.imageUrl && <img src={photo.imageUrl} alt={photo.title || "Photo"} />}
+            <div
+              key={photo?.id ?? index}
+              className="profile__grid-item"
+              onClick={() => photo?.id && navigate(`/photos/${photo.id}`)}
+              style={{ cursor: photo?.id ? "pointer" : "default" }}
+            >
+              {photo?.imageUrl && (
+                <img src={photo.imageUrl} alt={photo.title || "Photo"} />
+              )}
             </div>
           ))}
         </div>

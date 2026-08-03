@@ -7,6 +7,7 @@ import ResetPassword from "./pages/ResetPassword";
 import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
 import Upload from "./pages/Upload";
+import PhotoDetail from "./pages/PhotoDetail";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
         <Route path="/profile" element={<Profile />} />
         <Route path="/settings" element={<Settings />} />
         <Route path="/upload" element={<Upload />} />
+        <Route path="/photos/:id" element={<PhotoDetail />} />
       </Routes>
     </BrowserRouter>
   );
