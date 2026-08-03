@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { MapContainer, TileLayer, Marker } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, useMap } from "react-leaflet";
 import L from "leaflet";
 import icon from "leaflet/dist/images/marker-icon.png";
 import iconShadow from "leaflet/dist/images/marker-shadow.png";
@@ -20,6 +20,20 @@ L.Marker.prototype.options.icon = defaultIcon;
 const categories = ["Coastal", "Landscape", "Urban", "Wildlife", "Night"];
 const OTHER_VALUE = "__other__";
 
+// Recenters the map whenever position changes from outside (e.g. an address search),
+// since react-leaflet only uses the `center` prop on the very first render
+function RecenterMap({ position }) {
+  const map = useMap();
+
+  useEffect(() => {
+    if (position) {
+      map.setView(position, map.getZoom());
+    }
+  }, [position, map]);
+
+  return null;
+}
+
 function Upload() {
   const [step, setStep] = useState(1);
   const [selectedFiles, setSelectedFiles] = useState([]);
@@ -30,6 +44,10 @@ function Upload() {
   const [weather, setWeather] = useState(null);
   const [weatherLoading, setWeatherLoading] = useState(false);
   const [photoDate, setPhotoDate] = useState(new Date().toISOString().split("T")[0]);
+
+  const [addressQuery, setAddressQuery] = useState("");
+  const [searchingAddress, setSearchingAddress] = useState(false);
+  const [addressError, setAddressError] = useState("");
 
   const [lensOptions, setLensOptions] = useState([]);
   const [settingsOptions, setSettingsOptions] = useState([]);
@@ -128,6 +146,42 @@ function Upload() {
     const newPosition = marker.getLatLng();
     setPosition({ lat: newPosition.lat, lng: newPosition.lng });
     reverseGeocode(newPosition.lat, newPosition.lng);
+  };
+
+  const handleAddressSearch = async () => {
+    if (!addressQuery.trim()) return;
+
+    setSearchingAddress(true);
+    setAddressError("");
+
+    try {
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(addressQuery)}`
+      );
+      const results = await response.json();
+
+      if (!results.length) {
+        setAddressError("No matching location found.");
+        return;
+      }
+
+      const match = results[0];
+      const coords = { lat: parseFloat(match.lat), lng: parseFloat(match.lon) };
+      setPosition(coords);
+      setLocationName(match.display_name);
+    } catch (error) {
+      console.log(error);
+      setAddressError("Could not search that address.");
+    } finally {
+      setSearchingAddress(false);
+    }
+  };
+
+  const handleAddressKeyDown = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      handleAddressSearch();
+    }
   };
 
   const handleLensChange = (e) => {
@@ -259,6 +313,27 @@ function Upload() {
 
       {step === 2 && (
         <>
+          <p className="upload__label">Search address or postcode</p>
+          <div className="upload__other-row">
+            <input
+              type="text"
+              className="upload__input"
+              placeholder="e.g. Durdle Door, or BH20 5PU"
+              value={addressQuery}
+              onChange={(e) => setAddressQuery(e.target.value)}
+              onKeyDown={handleAddressKeyDown}
+            />
+            <button
+              type="button"
+              className="upload__add-btn"
+              onClick={handleAddressSearch}
+              disabled={searchingAddress}
+            >
+              {searchingAddress ? "..." : "Search"}
+            </button>
+          </div>
+          {addressError && <p className="upload__label">{addressError}</p>}
+
           <p className="upload__label">Detected location (GPS)</p>
           <p className="upload__location-name">
             {locating ? "Locating..." : locationName || "Location unavailable"}
@@ -272,6 +347,7 @@ function Upload() {
                   attribution="&copy; OpenStreetMap contributors"
                 />
                 <Marker position={position} draggable eventHandlers={{ dragend: handleMarkerDrag }} />
+                <RecenterMap position={position} />
               </MapContainer>
               <p className="upload__map-hint">Drag the pin to adjust</p>
             </div>
