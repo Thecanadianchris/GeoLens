@@ -34,6 +34,13 @@ function PhotoDetail() {
   const [customLensInput, setCustomLensInput] = useState("");
   const [customSettingsInput, setCustomSettingsInput] = useState("");
 
+  const [likeCount, setLikeCount] = useState(0);
+  const [isLiked, setIsLiked] = useState(false);
+  const [likeLoading, setLikeLoading] = useState(false);
+
+  const currentUserId = Number(localStorage.getItem("userId"));
+  const isOwner = photo && photo.userId === currentUserId;
+
   useEffect(() => {
     const fetchPhoto = async () => {
       try {
@@ -59,6 +66,20 @@ function PhotoDetail() {
 
     fetchPhoto();
   }, [id]);
+
+  useEffect(() => {
+    const fetchLikes = async () => {
+      try {
+        const response = await api.get(`/likes/photo/${id}`);
+        setLikeCount(response.data.length);
+        setIsLiked(response.data.some((like) => like.userId === currentUserId));
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchLikes();
+  }, [id, currentUserId]);
 
   useEffect(() => {
     if (isEditing) {
@@ -99,6 +120,26 @@ function PhotoDetail() {
       fetchWeather();
     }
   }, [isEditing, editDate, photo]);
+
+  const handleToggleLike = async () => {
+    setLikeLoading(true);
+
+    try {
+      if (isLiked) {
+        await api.delete(`/likes/${id}`);
+        setIsLiked(false);
+        setLikeCount((prev) => Math.max(0, prev - 1));
+      } else {
+        await api.post("/likes", { photoId: id });
+        setIsLiked(true);
+        setLikeCount((prev) => prev + 1);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+
+    setLikeLoading(false);
+  };
 
   const handleLensChange = (e) => {
     const value = e.target.value;
@@ -213,7 +254,7 @@ function PhotoDetail() {
         </button>
         <h1>{isEditing ? "Edit photo" : photo.title || "Photo"}</h1>
 
-        {!isEditing && (
+        {!isEditing && isOwner && (
           <button type="button" className="photo-detail__edit" onClick={() => setIsEditing(true)}>
             Edit
           </button>
@@ -251,14 +292,27 @@ function PhotoDetail() {
             </div>
           )}
 
-          <button
-            type="button"
-            className="photo-detail__delete"
-            onClick={handleDelete}
-            disabled={deleting}
-          >
-            {deleting ? "Deleting..." : "Delete photo"}
-          </button>
+          <div className="photo-detail__actions-row">
+            <button
+              type="button"
+              className={isLiked ? "photo-detail__like active" : "photo-detail__like"}
+              onClick={handleToggleLike}
+              disabled={likeLoading}
+            >
+              {isLiked ? "♥" : "♡"} {isLiked ? "Liked" : "Like"} &middot; {likeCount}
+            </button>
+
+            {isOwner && (
+              <button
+                type="button"
+                className="photo-detail__delete"
+                onClick={handleDelete}
+                disabled={deleting}
+              >
+                {deleting ? "Deleting..." : "Delete photo"}
+              </button>
+            )}
+          </div>
         </>
       )}
 

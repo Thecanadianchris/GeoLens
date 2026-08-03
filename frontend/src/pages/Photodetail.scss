@@ -69,6 +69,22 @@
     margin-bottom: spacer(1);
   }
 
+  &__like {
+    @include button-reset;
+    width: 100%;
+    padding: spacer(3);
+    border: $border-width solid $color-gray-300;
+    border-radius: $border-radius-lg;
+    color: $color-gray-500;
+    font-size: $font-size-sm;
+    margin-top: spacer(3);
+
+    &.active {
+      color: $color-danger;
+      border-color: $color-danger;
+    }
+  }
+
   &__delete {
     @include button-reset;
     width: 100%;
@@ -78,6 +94,18 @@
     color: $color-danger;
     font-size: $font-size-sm;
     margin-top: spacer(3);
+  }
+
+  &__actions-row {
+    display: flex;
+    gap: spacer(2);
+    margin-top: spacer(3);
+
+    .photo-detail__like,
+    .photo-detail__delete {
+      flex: 1;
+      margin-top: 0;
+    }
   }
 
   &__form {
@@ -111,5 +139,24 @@
     @include flex(row, flex-end, center);
     gap: spacer(2);
     margin-top: spacer(3);
+  }
+
+  &__other-row {
+    @include flex(row, flex-start, center);
+    gap: spacer(2);
+
+    .photo-detail__input {
+      margin-bottom: 0;
+    }
+  }
+
+  &__add-btn {
+    @include button-reset;
+    padding: spacer(2) spacer(3);
+    background: $color-black;
+    color: $color-white;
+    border-radius: $border-radius-lg;
+    font-size: $font-size-sm;
+    white-space: nowrap;
   }
 }
