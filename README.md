@@ -11,7 +11,9 @@ Every screen was built from wireframes first, so the app follows a mobile app la
 
 Styling is organised through a shared Sass "abstracts" system rather than one-off values scattered through each component: colours, font sizes, border radii, and breakpoints are all defined once and reused everywhere. Spacing in particular goes through a `spacer()` function tied to a shared spacing scale, so margins and padding stay consistent across pages instead of every component picking its own numbers. Reusable patterns like buttons and flex layouts are pulled in through Sass mixins rather than repeated by hand in each stylesheet.
 
-Because three people wher on the project this was standardised the styling keeping styling consistent going forward from the very start. 
+The name combined the concept of location with the word 'GEO' and 'LENS' relating to camera. The logo combined a camera iris with the text which utilised a globe instead of the 'O' in Geo.
+
+Because three people were on the project this was standardised the styling keeping styling consistent going forward from the very start. 
 
 
 ## What it does
