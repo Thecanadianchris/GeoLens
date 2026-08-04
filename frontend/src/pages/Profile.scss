@@ -103,12 +103,43 @@
     }
   }
 
-  &__map-placeholder {
+  &__map {
+    margin-bottom: spacer(4);
+
+    .leaflet-container {
+      border-radius: $border-radius-lg;
+      border: $border-width solid $color-gray-300;
+    }
+  }
+
+  &__map-empty {
+    font-size: $font-size-sm;
+    color: $color-gray-500;
+    margin-top: spacer(2);
+  }
+
+  &__map-popup {
+    cursor: pointer;
+    max-width: 180px;
+  }
+
+  &__map-popup-image {
     width: 100%;
-    aspect-ratio: 4 / 3;
-    background: $color-gray-100;
-    border: $border-width dashed $color-gray-300;
+    height: 100px;
+    object-fit: cover;
     border-radius: $border-radius-lg;
+    margin-bottom: spacer(1);
+  }
+
+  &__map-popup-title {
+    font-weight: $font-weight-semibold;
+    font-size: $font-size-sm;
+    margin-bottom: spacer(1);
+  }
+
+  &__map-popup-meta {
+    font-size: $font-size-sm;
+    color: $color-gray-500;
   }
 
   &__saved-list {
