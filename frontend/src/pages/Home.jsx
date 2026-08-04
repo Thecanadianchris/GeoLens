@@ -159,7 +159,7 @@ function Home() {
   const sortPhotos = (list, sortValue) => {
     const sorted = [...list];
     if (sortValue === "rating") {
-      sorted.sort((a, b) => (b.weatherRating || 0) - (a.weatherRating || 0));
+      sorted.sort((a, b) => (b.likeCount || 0) - (a.likeCount || 0));
     } else if (sortValue === "newest") {
       sorted.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     } else if (sortValue === "distance" && position) {
@@ -187,7 +187,10 @@ function Home() {
     matchesFilters(photo, draftCounty, draftCategory, draftWeather)
   ).length;
 
-  const photosWithCoords = filteredPhotos.filter((photo) => photo.latitude && photo.longitude);
+  const photosWithCoords =
+  sortBy === "rating"
+    ? filteredPhotos.filter((photo) => photo.latitude && photo.longitude).slice(0, 10)
+    : filteredPhotos.filter((photo) => photo.latitude && photo.longitude);
 
   const recentlyAdded = [...filteredPhotos]
     .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
@@ -278,7 +281,7 @@ function Home() {
           className={sortBy === "rating" ? "home__filter-chip active" : "home__filter-chip"}
           onClick={() => setSortBy(sortBy === "rating" ? "distance" : "rating")}
         >
-          Top pics ★
+          Top 10 pics ♥
         </button>
       </div>
 
@@ -338,9 +341,11 @@ function Home() {
             <div className="home__filter-radio-group">
               {[
                 { key: "distance", label: "Distance" },
-                { key: "rating", label: "Rating" },
+                { key: "rating", label: "Most Liked" },
                 { key: "newest", label: "Newest" },
               ].map((option) => (
+
+
                 <label key={option.key} className="home__filter-radio">
                   <input
                     type="radio"
