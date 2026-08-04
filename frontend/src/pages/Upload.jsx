@@ -17,7 +17,7 @@ const defaultIcon = L.icon({
 });
 L.Marker.prototype.options.icon = defaultIcon;
 
-const categories = ["Coastal", "Landscape", "Urban", "Wildlife", "Night"];
+const categories = ["Coastal", "Landscape", "Urban", "Wildlife", "Night", "People"];
 const OTHER_VALUE = "__other__";
 
 // Recenters the map whenever position changes from outside (e.g. an address search),

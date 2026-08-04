@@ -4,7 +4,7 @@ import api from "../api/axios";
 import BottomNav from "../components/BottomNav";
 import "./PhotoDetail.scss";
 
-const categories = ["Coastal", "Landscape", "Urban", "Wildlife", "Night"];
+const categories = ["Coastal", "Landscape", "Urban", "Wildlife", "Night", "People"];
 const OTHER_VALUE = "__other__";
 
 function PhotoDetail() {

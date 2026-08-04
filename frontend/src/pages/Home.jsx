@@ -17,6 +17,32 @@ const defaultIcon = L.icon({
 });
 L.Marker.prototype.options.icon = defaultIcon;
 
+const categories = ["Coastal", "Landscape", "Urban", "Wildlife", "Night", "People"];
+
+const weatherConditions = [
+  "Clear",
+  "Partly Cloudy",
+  "Overcast",
+  "Clouds",
+  "Rain",
+  "Drizzle",
+  "Snow",
+  "Fog",
+  "Thunderstorm",
+];
+
+const counties = [
+  "Bedfordshire", "Berkshire", "Bristol", "Buckinghamshire", "Cambridgeshire",
+  "Cheshire", "City of London", "Cornwall", "County Durham", "Cumbria",
+  "Derbyshire", "Devon", "Dorset", "East Sussex", "Essex",
+  "Gloucestershire", "Greater London", "Greater Manchester", "Hampshire", "Herefordshire",
+  "Hertfordshire", "Kent", "Lancashire", "Leicestershire", "Lincolnshire",
+  "Merseyside", "Norfolk", "North Yorkshire", "Northamptonshire", "Northumberland",
+  "Nottinghamshire", "Oxfordshire", "Pembrokeshire", "Shropshire", "Somerset",
+  "South Yorkshire", "Staffordshire", "Suffolk", "Surrey", "Tyne and Wear",
+  "Warwickshire", "West Midlands", "West Sussex", "West Yorkshire", "Wiltshire", "Worcestershire",
+];
+
 // Rough distance between two lat/lon points, in KM (haversine formula)
 const getDistanceKm = (lat1, lon1, lat2, lon2) => {
   const R = 6371;
@@ -38,6 +64,20 @@ function Home() {
   const [loading, setLoading] = useState(true);
   const [position, setPosition] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
+
+  const [showFilters, setShowFilters] = useState(false);
+
+  // Applied filters (what's actually being used right now)
+  const [county, setCounty] = useState("");
+  const [category, setCategory] = useState("");
+  const [weather, setWeather] = useState("");
+  const [sortBy, setSortBy] = useState("distance");
+
+  // Draft filters (what's being picked inside the open panel, not applied yet)
+  const [draftCounty, setDraftCounty] = useState("");
+  const [draftCategory, setDraftCategory] = useState("");
+  const [draftWeather, setDraftWeather] = useState("");
+  const [draftSortBy, setDraftSortBy] = useState("distance");
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
@@ -79,13 +119,81 @@ function Home() {
     fetchPhotos();
   }, []);
 
-  const photosWithCoords = photos.filter((photo) => photo.latitude && photo.longitude);
+  const openFilters = () => {
+    // Start the panel with whatever is currently applied
+    setDraftCounty(county);
+    setDraftCategory(category);
+    setDraftWeather(weather);
+    setDraftSortBy(sortBy);
+    setShowFilters(true);
+  };
 
-  const recentlyAdded = [...photos]
+  const applyFilters = () => {
+    setCounty(draftCounty);
+    setCategory(draftCategory);
+    setWeather(draftWeather);
+    setSortBy(draftSortBy);
+    setShowFilters(false);
+  };
+
+  const resetFilters = () => {
+    setDraftCounty("");
+    setDraftCategory("");
+    setDraftWeather("");
+    setDraftSortBy("distance");
+  };
+
+  const matchesFilters = (photo, countyValue, categoryValue, weatherValue) => {
+    if (countyValue && !photo.location?.toLowerCase().includes(countyValue.toLowerCase())) {
+      return false;
+    }
+    if (categoryValue && photo.category !== categoryValue) {
+      return false;
+    }
+    if (weatherValue && photo.weatherCondition !== weatherValue) {
+      return false;
+    }
+    return true;
+  };
+
+  const sortPhotos = (list, sortValue) => {
+    const sorted = [...list];
+    if (sortValue === "rating") {
+      sorted.sort((a, b) => (b.weatherRating || 0) - (a.weatherRating || 0));
+    } else if (sortValue === "newest") {
+      sorted.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    } else if (sortValue === "distance" && position) {
+      sorted.sort((a, b) => {
+        const distA =
+          a.latitude && a.longitude
+            ? getDistanceKm(position.lat, position.lng, a.latitude, a.longitude)
+            : Infinity;
+        const distB =
+          b.latitude && b.longitude
+            ? getDistanceKm(position.lat, position.lng, b.latitude, b.longitude)
+            : Infinity;
+        return distA - distB;
+      });
+    }
+    return sorted;
+  };
+
+  const filteredPhotos = sortPhotos(
+    photos.filter((photo) => matchesFilters(photo, county, category, weather)),
+    sortBy
+  );
+
+  const draftResultCount = photos.filter((photo) =>
+    matchesFilters(photo, draftCounty, draftCategory, draftWeather)
+  ).length;
+
+  const photosWithCoords = filteredPhotos.filter((photo) => photo.latitude && photo.longitude);
+
+  const recentlyAdded = [...filteredPhotos]
     .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
     .slice(0, 5);
 
-  const bestSpots = [...photos]
+  const bestSpots = [...filteredPhotos]
     .sort((a, b) => (b.likeCount || 0) - (a.likeCount || 0))
     .slice(0, 3);
 
@@ -99,7 +207,7 @@ function Home() {
         .slice(0, 5)
     : [];
 
-  const locationGroups = photos.reduce((groups, photo) => {
+  const locationGroups = filteredPhotos.reduce((groups, photo) => {
     if (!photo.location) return groups;
     if (!groups[photo.location]) {
       groups[photo.location] = { location: photo.location, photos: [] };
@@ -122,7 +230,7 @@ function Home() {
     .slice(0, 4);
 
   const searchResults = searchQuery.trim()
-    ? photos.filter(
+    ? filteredPhotos.filter(
         (photo) =>
           photo.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
           photo.location?.toLowerCase().includes(searchQuery.toLowerCase())
@@ -144,11 +252,113 @@ function Home() {
       />
 
       <div className="home__filter-row">
-        <button type="button" className="home__filter-chip">County</button>
-        <button type="button" className="home__filter-chip">Category</button>
-        <button type="button" className="home__filter-chip">Weather</button>
-        <button type="button" className="home__filter-chip">Top pics ★</button>
+        <button
+          type="button"
+          className={county ? "home__filter-chip active" : "home__filter-chip"}
+          onClick={openFilters}
+        >
+          County{county ? `: ${county}` : ""}
+        </button>
+        <button
+          type="button"
+          className={category ? "home__filter-chip active" : "home__filter-chip"}
+          onClick={openFilters}
+        >
+          Category{category ? `: ${category}` : ""}
+        </button>
+        <button
+          type="button"
+          className={weather ? "home__filter-chip active" : "home__filter-chip"}
+          onClick={openFilters}
+        >
+          Weather{weather ? `: ${weather}` : ""}
+        </button>
+        <button
+          type="button"
+          className={sortBy === "rating" ? "home__filter-chip active" : "home__filter-chip"}
+          onClick={() => setSortBy(sortBy === "rating" ? "distance" : "rating")}
+        >
+          Top pics ★
+        </button>
       </div>
+
+      {showFilters && (
+        <div className="home__filter-overlay">
+          <div className="home__filter-panel">
+            <div className="home__filter-header">
+              <h2>Filters</h2>
+              <button type="button" className="home__filter-reset" onClick={resetFilters}>
+                Reset
+              </button>
+            </div>
+
+            <label className="home__filter-label">County</label>
+            <select
+              className="home__filter-select"
+              value={draftCounty}
+              onChange={(e) => setDraftCounty(e.target.value)}
+            >
+              <option value="">All Counties</option>
+              {counties.map((c) => (
+                <option key={c} value={c}>
+                  {c}
+                </option>
+              ))}
+            </select>
+
+            <label className="home__filter-label">Category</label>
+            <select
+              className="home__filter-select"
+              value={draftCategory}
+              onChange={(e) => setDraftCategory(e.target.value)}
+            >
+              <option value="">All Categories</option>
+              {categories.map((c) => (
+                <option key={c} value={c}>
+                  {c}
+                </option>
+              ))}
+            </select>
+
+            <label className="home__filter-label">Weather</label>
+            <select
+              className="home__filter-select"
+              value={draftWeather}
+              onChange={(e) => setDraftWeather(e.target.value)}
+            >
+              <option value="">Any</option>
+              {weatherConditions.map((w) => (
+                <option key={w} value={w}>
+                  {w}
+                </option>
+              ))}
+            </select>
+
+            <label className="home__filter-label">Sort by</label>
+            <div className="home__filter-radio-group">
+              {[
+                { key: "distance", label: "Distance" },
+                { key: "rating", label: "Rating" },
+                { key: "newest", label: "Newest" },
+              ].map((option) => (
+                <label key={option.key} className="home__filter-radio">
+                  <input
+                    type="radio"
+                    name="sortBy"
+                    checked={draftSortBy === option.key}
+                    onChange={() => setDraftSortBy(option.key)}
+                  />
+                  {option.label}
+                </label>
+              ))}
+            </div>
+
+            <button type="button" className="btn btn--primary home__filter-apply" onClick={applyFilters}>
+              Show {draftResultCount} Results
+            </button>
+          </div>
+        </div>
+      )}
 
       {searchResults ? (
         <div className="home__search-results">
