@@ -35,7 +35,7 @@ Not deployed yet — currently runs locally only
 
 ## Tech stack
 
-Frontend: React (Vite), React Router, Axios, React Hook Form, Sass, Leaflet / React-Leaflet
+Frontend: React (Vite), React Router, Axios, React Hook Form, Tailwindcss, Leaflet / React-Leaflet
 
 Backend:Node.js, Express, Sequelize, PostgreSQL (hosted on Supabase), Supabase Storage (image uploads), Multer for file handling
 
