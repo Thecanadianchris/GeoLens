@@ -1,6 +1,11 @@
 const app = require("express").Router();
+const multer = require("multer");
+const path = require("path");
 const verifyToken = require("../middleware/auth");
+const supabase = require("../config/supabase");
 const { User, Photo } = require("../models/index");
+
+const upload = multer({ storage: multer.memoryStorage() });
 
 // Route to get a user profile
 app.get("/:id", async (req, res) => {
@@ -38,14 +43,38 @@ app.get("/:id/photos", async (req, res) => {
 });
 
 // Route to update my profile
-app.put("/:id", verifyToken, async (req, res) => {
+app.put("/:id", verifyToken, upload.single("profilePhoto"), async (req, res) => {
   try {
-    const { username, profilePhoto, title, location, bio } = req.body;
+    const { username, title, location, bio } = req.body;
 
-    const user = await User.update(
-      { username, profilePhoto, title, location, bio },
-      { where: { id: req.userId } }
-    );
+    let profilePhotoUrl;
+
+    if (req.file) {
+      const fileName = Date.now() + path.extname(req.file.originalname);
+
+      const { error } = await supabase.storage
+        .from("photos")
+        .upload(fileName, req.file.buffer, { contentType: req.file.mimetype });
+
+      if (error) {
+        console.log(error);
+        return res.status(500).json({ error: "Error uploading profile photo" });
+      }
+
+      const { data } = supabase.storage.from("photos").getPublicUrl(fileName);
+      profilePhotoUrl = data.publicUrl;
+    }
+
+    const updateData = { username, title, location, bio };
+    if (profilePhotoUrl) {
+      updateData.profilePhoto = profilePhotoUrl;
+    }
+
+    await User.update(updateData, { where: { id: req.userId } });
+
+    const user = await User.findByPk(req.userId, {
+      attributes: ["id", "username", "profilePhoto", "title", "location", "bio", "createdAt"],
+    });
 
     res.json(user);
   } catch (error) {

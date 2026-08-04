@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import api from "../api/axios";
 import BottomNav from "../components/BottomNav";
 import "./Profile.scss";
+import { FiUser } from "react-icons/fi";
 
 const savedLocations = [
   { id: 1, name: "Cheddar Gorge", distance: "20 KM" },
@@ -55,13 +56,19 @@ function Profile() {
     <div className="page profile">
       <header className="profile__header">
         <h1>{user?.username}</h1>
-        <button type="button" className="profile__edit">
+        <button type="button" className="profile__edit" onClick={() => navigate("/profile/edit")}>
           Edit
         </button>
       </header>
 
       <div className="profile__info">
-        <div className="profile__avatar" />
+        <div className="profile__avatar">
+          {user?.profilePhoto ? (
+            <img src={user.profilePhoto} alt={user.username} />
+          ) : (
+            <FiUser />
+          )}
+        </div>
         <div>
           <p className="profile__username">@{user?.username}</p>
           <p className="profile__meta">
