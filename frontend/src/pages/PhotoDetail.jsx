@@ -336,12 +336,6 @@ function PhotoDetail() {
             {photo.dateTaken && <p className="photo-detail__category">Taken {photo.dateTaken}</p>}
           </div>
 
-          {photo.weatherCondition && (
-            <div className="photo-detail__weather">
-              <span>{photo.weatherCondition}</span>
-              {photo.weatherRating && <span>Score {photo.weatherRating}%</span>}
-            </div>
-          )}
 
           {photo.cameraDetails && (
             <div className="photo-detail__section">
