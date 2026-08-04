@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import api from "../api/axios";
 import BottomNav from "../components/BottomNav";
 import "./PhotoDetail.scss";
+import { FiShare2 } from "react-icons/fi";
 
 const categories = ["Coastal", "Landscape", "Urban", "Wildlife", "Night", "People"];
 const OTHER_VALUE = "__other__";
@@ -160,6 +161,21 @@ function PhotoDetail() {
     }
 
     setLikeLoading(false);
+  };
+
+  const handleShare = async () => {
+    const shareUrl = window.location.href;
+    const shareText = `Check out this photo on GeoLens: ${photo.title || "Untitled"}`;
+
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: photo.title || "GeoLens Photo", text: shareText, url: shareUrl });
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      window.open(`https://wa.me/?text=${encodeURIComponent(`${shareText} ${shareUrl}`)}`, "_blank");
+    }
   };
 
   const handlePostComment = async () => {
@@ -349,6 +365,11 @@ function PhotoDetail() {
               disabled={likeLoading}
             >
               {isLiked ? "♥" : "♡"} {isLiked ? "Liked" : "Like"} &middot; {likeCount}
+            </button>
+
+            <button type="button" className="photo-detail__share" onClick={handleShare}>
+              <FiShare2 />
+              Share
             </button>
 
             {isOwner && (
