@@ -13,6 +13,7 @@
     "sass:build": "sass src/styles/main.scss dist/css/main.min.css --style=compressed --load-path=node_modules --no-source-map"
   },
   "dependencies": {
+    "@tailwindcss/vite": "^4.3.3",
     "axios": "^1.19.0",
     "leaflet": "^1.9.4",
     "material-icons": "^1.13.14",
@@ -22,7 +23,8 @@
     "react-icons": "^5.7.0",
     "react-leaflet": "^5.0.0",
     "react-router-dom": "^7.18.2",
-    "sass": "^1.102.0"
+    "sass": "^1.102.0",
+    "tailwindcss": "^4.3.3"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
