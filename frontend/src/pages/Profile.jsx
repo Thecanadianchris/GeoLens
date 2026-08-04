@@ -74,6 +74,7 @@ function Profile() {
           <p className="profile__meta">
             {user?.location || "No location set"} &middot; {user?.photos?.length || 0} photos
           </p>
+          {user?.bio && <p className="profile__bio">{user.bio}</p>}
         </div>
       </div>
 
