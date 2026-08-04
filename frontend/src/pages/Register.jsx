@@ -40,8 +40,7 @@ function Register() {
         &lt; Back
       </Link>
 
-      <h1 className="register__title">Register</h1>
-
+      <h1 className="text-3xl font-bold underline">Register</h1>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="field">
           <label htmlFor="name">Name</label>
