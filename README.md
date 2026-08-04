@@ -27,7 +27,6 @@ Search by location, landmark, or county
 
 ## What's not built yet
 
-No notifications page (the backend already logs likes/comments as notifications, there's just no screen to view them)
 No desktop-specific layout — everything's designed mobile-first
 Not deployed yet — currently runs locally only
 
