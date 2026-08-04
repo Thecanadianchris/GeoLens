@@ -107,3 +107,5 @@ GeoLens/
 ## Warnings !!!
 
 Password reset doesn't send an email — there's no email service wired up yet, so it just takes the account email and a new password directly and updates it. Fine for testing locally and this project, but means anyone who knows an account's email can reset that password, so it's not something to leave like this if this ever goes further than a local demo.
+
+Save v2 
