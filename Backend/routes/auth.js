@@ -67,4 +67,27 @@ app.post("/login", async (req, res) => {
   }
 });
 
+
+// Route to reset password
+app.post("/reset-password", async (req, res) => {
+  try {
+    const { email, newPassword } = req.body;
+
+    const user = await User.findOne({ where: { email } });
+    if (!user) {
+      return res.status(404).json({ error: "No account found with that email" });
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    await User.update({ password: hashedPassword }, { where: { id: user.id } });
+
+    res.json({ message: "Password reset successful" });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Error resetting password" });
+  }
+});
+
+
 module.exports = app;

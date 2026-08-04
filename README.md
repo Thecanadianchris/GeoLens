@@ -37,7 +37,7 @@ Frontend: React (Vite), React Router, Axios, React Hook Form, Sass, Leaflet / Re
 
 Backend:Node.js, Express, Sequelize, PostgreSQL (hosted on Supabase), Supabase Storage (image uploads), Multer for file handling
 
-Authentication  uses JWT (JSON Web Token) 
+Authentication  uses JWT (JSON Web Token) (Pasword Reset Local Only, see warning bellow!)
 
 **Third-party APIs (all free, no paid tier required):**
 [Open-Meteo](https://open-meteo.com/) — weather data, no API key needed
@@ -103,3 +103,7 @@ GeoLens/
 ├── components/ # shared components (BottomNav, etc.)
 ├── pages/ # route-level pages
 └── styles/ # Sass abstracts, base, components, layout, pages
+
+## Warnings !!!
+
+Password reset doesn't send an email — there's no email service wired up yet, so it just takes the account email and a new password directly and updates it. Fine for testing locally and this project, but means anyone who knows an account's email can reset that password, so it's not something to leave like this if this ever goes further than a local demo.

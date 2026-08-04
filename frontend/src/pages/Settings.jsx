@@ -3,7 +3,10 @@ import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import BottomNav from "../components/BottomNav";
 import "./Settings.scss";
 
-const accountRows = [{ label: "Edit profile" }, { label: "Email & password" }];
+const accountRows = [
+  { label: "Edit profile", path: "/profile" },
+  { label: "Email & password", path: "/reset-password" },
+];
 
 const preferenceRows = [
   { label: "Units", value: "METRIC" },
@@ -13,9 +16,9 @@ const preferenceRows = [
 
 const aboutRows = [{ label: "Privacy policy" }, { label: "Terms" }];
 
-function SettingsRow({ label, value }) {
+function SettingsRow({ label, value, onClick }) {
   return (
-    <button type="button" className="settings__row">
+    <button type="button" className="settings__row" onClick={onClick}>
       <span>{label}</span>
       <span className="settings__row-right">
         {value && <span className="settings__row-value">{value}</span>}
@@ -50,7 +53,11 @@ function Settings() {
       <section className="settings__section">
         <h2 className="settings__section-title">Account</h2>
         {accountRows.map((row) => (
-          <SettingsRow key={row.label} label={row.label} />
+          <SettingsRow
+            key={row.label}
+            label={row.label}
+            onClick={() => row.path && navigate(row.path)}
+          />
         ))}
       </section>
 
