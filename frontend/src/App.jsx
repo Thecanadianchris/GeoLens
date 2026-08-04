@@ -8,6 +8,7 @@ import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
 import Upload from "./pages/Upload";
 import PhotoDetail from "./pages/PhotoDetail";
+import Notifications from "./pages/Notifications";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <Route path="/settings" element={<Settings />} />
         <Route path="/upload" element={<Upload />} />
         <Route path="/photos/:id" element={<PhotoDetail />} />
+        <Route path="/alerts" element={<Notifications />} />
       </Routes>
     </BrowserRouter>
   );
