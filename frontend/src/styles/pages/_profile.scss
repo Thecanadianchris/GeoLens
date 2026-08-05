@@ -1,0 +1,160 @@
+@use "../abstracts" as *;
+
+.profile {
+  max-width: 420px;
+  margin: 0 auto;
+  padding: spacer(4) spacer(4) 5rem;
+  font-family: $font-family-base;
+
+  &__header {
+    @include flex(row, space-between, center);
+    margin-bottom: spacer(4);
+
+    h1 {
+      font-size: $font-size-xl;
+      font-weight: $font-weight-bold;
+    }
+  }
+
+  &__edit {
+    @include button-reset;
+    font-size: $font-size-sm;
+    color: $color-gray-500;
+  }
+
+  &__info {
+    @include flex(row, flex-start, center);
+    gap: spacer(3);
+    margin-bottom: spacer(4);
+  }
+
+  &__avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: $border-radius-full;
+    background: $color-gray-100;
+    border: $border-width solid $color-gray-300;
+    flex-shrink: 0;
+    overflow: hidden;
+    @include flex(row, center, center);
+    color: $color-gray-500;
+    font-size: $font-size-xl;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  &__username {
+    font-weight: $font-weight-semibold;
+  }
+
+  &__meta {
+    font-size: $font-size-sm;
+    color: $color-gray-500;
+  }
+
+  &__bio {
+    font-size: $font-size-sm;
+    color: $color-gray-500;
+    margin-top: spacer(1);
+  }
+
+  &__tabs {
+    @include flex(row, flex-start, center);
+    gap: spacer(4);
+    border-bottom: $border-width solid $color-gray-300;
+    margin-bottom: spacer(4);
+  }
+
+  &__tab {
+    @include button-reset;
+    padding-bottom: spacer(2);
+    font-size: $font-size-sm;
+    color: $color-gray-500;
+    border-bottom: 2px solid transparent;
+
+    &.active {
+      color: $color-black;
+      font-weight: $font-weight-semibold;
+      border-bottom-color: $color-black;
+    }
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: spacer(2);
+  }
+
+  &__grid-item {
+    aspect-ratio: 1 / 1;
+    background: $color-gray-100;
+    border: $border-width dashed $color-gray-300;
+    border-radius: $border-radius-lg;
+    overflow: hidden;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  &__map {
+    margin-bottom: spacer(4);
+
+    .leaflet-container {
+      border-radius: $border-radius-lg;
+      border: $border-width solid $color-gray-300;
+    }
+  }
+
+  &__map-empty {
+    font-size: $font-size-sm;
+    color: $color-gray-500;
+    margin-top: spacer(2);
+  }
+
+  &__map-popup {
+    cursor: pointer;
+    max-width: 180px;
+  }
+
+  &__map-popup-image {
+    width: 100%;
+    height: 100px;
+    object-fit: cover;
+    border-radius: $border-radius-lg;
+    margin-bottom: spacer(1);
+  }
+
+  &__map-popup-title {
+    font-weight: $font-weight-semibold;
+    font-size: $font-size-sm;
+    margin-bottom: spacer(1);
+  }
+
+  &__map-popup-meta {
+    font-size: $font-size-sm;
+    color: $color-gray-500;
+  }
+
+  &__saved-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: spacer(2);
+  }
+
+  &__saved-item {
+    @include flex(row, space-between, center);
+    padding: spacer(3);
+    border: $border-width solid $color-gray-300;
+    border-radius: $border-radius-lg;
+    font-size: $font-size-sm;
+  }
+}

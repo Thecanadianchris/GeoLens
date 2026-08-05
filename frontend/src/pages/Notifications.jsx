@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../api/axios";
 import BottomNav from "../components/BottomNav";
-import "./Notifications.scss";
+// import "./Notifications.scss";
 
 const timeAgo = (dateString) => {
   const seconds = Math.floor((new Date() - new Date(dateString)) / 1000);

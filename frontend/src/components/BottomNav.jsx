@@ -21,7 +21,7 @@ function BottomNav() {
       <NavLink to="/upload" className={linkClass}>
         <FiPlusCircle />
         <span>Upload</span>
-      </NavLink>#
+      </NavLink>
       
 
 

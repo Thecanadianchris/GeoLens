@@ -9,9 +9,14 @@
   max-width: $max-width;
   min-height: 100vh;
   margin: 0 auto;
+  margin-inline: auto;
+  min-height: 100dvh;
   padding: $space-xl $space-lg;
   display: flex;
   flex-direction: column;
+  background: var(--paper);
+  position: relative;
+  box-shadow: 0 0 60px rgba(0, 0, 0, 0.45);
 }
 
 .container {

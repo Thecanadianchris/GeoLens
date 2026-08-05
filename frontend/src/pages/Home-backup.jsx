@@ -7,85 +7,7 @@ import iconShadow from "leaflet/dist/images/marker-shadow.png";
 import "leaflet/dist/leaflet.css";
 import api from "../api/axios";
 import BottomNav from "../components/BottomNav";
-// import "./Home.scss";
-import {
-  Bell,
-  Settings,
-  Search,
-  Star,
-  MapPin,
-  Plus,
-  Camera,
-  User,
-  ChevronRight,
-  Sunrise,
-  Moon,
-  CloudFog,
-} from "lucide-react";
- 
-
-
-const TOKENS = {
-  ink: "#12141C",
-  inkSoft: "#191C27",
-  card: "#1E2230",
-  hairline: "rgba(245,239,227,0.10)",
-  hairlineStrong: "rgba(245,239,227,0.18)",
-  cream: "#F5EFE3",
-  creamDim: "rgba(245,239,227,0.62)",
-  creamFaint: "rgba(245,239,227,0.38)",
-  gold: "#E8A33D",
-  violet: "#8B7FC0",
-  coral: "#E2694B",
-  moss: "#7FA383",
-};
- 
-const spots = [
-  { name: "Cornwall", rating: 5 },
-  { name: "Somerset", rating: 5 },
-  { name: "Devon", rating: 4 },
-];
- 
-const nearby = [
-  {
-    tag: "Best now",
-    tone: TOKENS.coral,
-    icon: Sunrise,
-    title: "Sunset sky over a coastal overlook, golden hour",
-    place: "Dorset",
-    score: 87,
-    condition: "Clear",
-    gradient: "linear-gradient(160deg,#3A2233 0%,#8A4A3B 55%,#E8A33D 100%)",
-  },
-  {
-    tag: "Night ready",
-    tone: TOKENS.violet,
-    icon: Moon,
-    title: "Nightscape with stars and milky way",
-    place: "Cornwall",
-    score: 92,
-    condition: "Low light",
-    gradient: "linear-gradient(160deg,#0B0E1F 0%,#232A52 55%,#8B7FC0 100%)",
-  },
-  {
-    tag: "Waitlist",
-    tone: TOKENS.creamDim,
-    icon: CloudFog,
-    title: "Dramatic clouds over a mountain ridge",
-    place: "Ridge Cloud",
-    score: 79,
-    condition: "Overcast",
-    gradient: "linear-gradient(160deg,#1E222C 0%,#3C4250 55%,#6B7280 100%)",
-  },
-];
- 
-const popular = [
-  { name: "Durdle Door", rating: 4.9, distance: "12 km" },
-  { name: "Cheddar Gorge", rating: 4.8, distance: "20 km" },
-];
- 
-const filters = ["County", "Category", "Weather", "Top pics"];
-
+import "./Home.scss";
 
 const defaultIcon = L.icon({
   iconUrl: icon,
@@ -324,62 +246,15 @@ function Home() {
 
   return (
     <div className="page home">
+      <img src="/logo.png" alt="GEOLens" className="login__logo" />
 
-      {/* Header */}
-      <div style={{ padding: "20px 20px 0" }}>
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <img src="/logo.svg" alt="GEOLens" className="home__logo" />
-
-          </div>
-          </div>
-      </div>
-
-      {/* Search */}
-      {/* <div className="home__search-container">
-        <input
-          type="text"
-          className="home__search"
-          placeholder="Search location, landmark, or county..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
-      </div>
       <input
         type="text"
         className="home__search"
         placeholder="Search location, landmark, or county..."
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
-      /> */}
-
-      {/* Search */}
-        <div
-          style={{
-            marginTop: 18,
-            display: "flex",
-            alignItems: "center",
-            gap: 10,
-            border: `0.5px solid ${TOKENS.hairlineStrong}`,
-            background: TOKENS.inkSoft,
-            borderRadius: 12,
-            padding: "11px 14px",
-          }}
-        >
-          <Search size={16} color={TOKENS.creamFaint} strokeWidth={1.8} />
-          <input
-            type="text"
-            placeholder="Search location, landmark, or county..."
-            style={{
-              border: "none",
-              outline: "none",
-              background: "transparent",
-              color: TOKENS.cream,
-              fontSize: 13.5,
-              width: "100%",
-            }}
-          />
-        </div>
+      />
 
       <div className="home__filter-row">
         <button

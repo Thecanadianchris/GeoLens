@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { FiChevronLeft, FiUser } from "react-icons/fi";
 import api from "../api/axios";
-import "./EditProfile.scss";
+// import "./EditProfile.scss";
 
 function EditProfile() {
   const navigate = useNavigate();

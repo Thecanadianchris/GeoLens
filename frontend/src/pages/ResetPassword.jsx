@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../api/axios";
-import "./ResetPassword.scss";
+// import "./ResetPassword.scss";
 
 function ResetPassword() {
   const { register, handleSubmit, watch, formState: { errors } } = useForm();

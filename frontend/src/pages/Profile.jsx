@@ -7,7 +7,7 @@ import iconShadow from "leaflet/dist/images/marker-shadow.png";
 import "leaflet/dist/leaflet.css";
 import api from "../api/axios";
 import BottomNav from "../components/BottomNav";
-import "./Profile.scss";
+// import "./Profile.scss";
 import { FiUser } from "react-icons/fi";
 
 const defaultIcon = L.icon({

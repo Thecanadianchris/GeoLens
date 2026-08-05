@@ -7,7 +7,7 @@ import iconShadow from "leaflet/dist/images/marker-shadow.png";
 import "leaflet/dist/leaflet.css";
 import api from "../api/axios";
 import BottomNav from "../components/BottomNav";
-import "./Upload.scss";
+// import "./Upload.scss";
 
 const defaultIcon = L.icon({
   iconUrl: icon,

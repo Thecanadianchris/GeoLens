@@ -2,7 +2,9 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../api/axios";
-import "./Register.scss";
+import Logo from "../components/Logo"; // Import your logo component
+
+// import "./Register.scss";
 
 function Register() {
   const { register, handleSubmit, watch, formState: { errors } } = useForm();
@@ -39,7 +41,7 @@ function Register() {
       <Link to="/" className="register__back">
         &lt; Back
       </Link>
-
+      <Logo altText="GEOLens Logo" />
       <h1 className="register__title">Register</h1>
 
       <form onSubmit={handleSubmit(onSubmit)}>

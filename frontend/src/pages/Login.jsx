@@ -2,7 +2,8 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../api/axios";
-import "./Login.scss";
+import Logo from "../components/Logo"; // Import your logo component
+// import "./Login.scss";
 
 function Login() {
   const { register, handleSubmit, formState: { errors } } = useForm();
@@ -32,8 +33,7 @@ function Login() {
 
   return (
     <div className="page login">
-      <img src="/logo.png" alt="GEOLens" className="login__logo" />
-
+      <Logo altText="GEOLens Logo" />
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="field">
           <label htmlFor="email">Email</label>

@@ -10,6 +10,7 @@
 // @use "vendors/normalize";
 
 // 3. Base (resets, global element styles, utilities)
+@use "base/base";
 @use "base/reset";
 @use "base/typography";
 @use "base/utilities";
@@ -26,6 +27,10 @@
 
 // 6. Pages (page-specific overrides)
 // @use "pages/home";
+@use "pages/home";
+@use "pages/landing";
+@use "pages/login";
+@use "pages/register";
 
 // 7. Themes (optional alternate themes)
 // @use "themes/dark";

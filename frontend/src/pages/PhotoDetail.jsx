@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import api from "../api/axios";
 import BottomNav from "../components/BottomNav";
-import "./PhotoDetail.scss";
+// import "./PhotoDetail.scss";
 import { FiShare2 } from "react-icons/fi";
 
 const categories = ["Coastal", "Landscape", "Urban", "Wildlife", "Night", "People"];
