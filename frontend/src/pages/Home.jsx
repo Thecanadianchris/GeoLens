@@ -440,11 +440,9 @@ function Home() {
                         className="home__best-row"
                         onClick={() => navigate(`/photos/${photo.id}`)}
                       >
-                        <div className="flex gap-3">
                         <p className="home__best-location">{photo.location}</p>   
                         <div className="flex items-center gap-1">                     
                         <p className="home__best-meta">♥ {photo.likeCount || 0}</p>
-                        </div>
                         </div>
                       </div>
                     ))}
