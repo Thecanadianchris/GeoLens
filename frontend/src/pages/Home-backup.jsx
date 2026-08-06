@@ -7,7 +7,22 @@ import iconShadow from "leaflet/dist/images/marker-shadow.png";
 import "leaflet/dist/leaflet.css";
 import api from "../api/axios";
 import BottomNav from "../components/BottomNav";
-import "./Home.scss";
+// import "./Home.scss";
+import {
+  Bell,
+  Settings,
+  Search,
+  Star,
+  MapPin,
+  Plus,
+  Camera,
+  User,
+  ChevronRight,
+  Sunrise,
+  Moon,
+  CloudFog,
+} from "lucide-react";
+ 
 
 const defaultIcon = L.icon({
   iconUrl: icon,

@@ -7,6 +7,8 @@ import iconShadow from "leaflet/dist/images/marker-shadow.png";
 import "leaflet/dist/leaflet.css";
 import api from "../api/axios";
 import BottomNav from "../components/BottomNav";
+import Header from "../components/Header"; 
+  
 // import "./Profile.scss";
 import { FiUser } from "react-icons/fi";
 
@@ -77,95 +79,98 @@ function Profile() {
 
   return (
     <div className="page profile">
-      <header className="profile__header">
-        <h1>{user?.username}</h1>
-        <button type="button" className="profile__edit" onClick={() => navigate("/profile/edit")}>
-          Edit
-        </button>
-      </header>
-
-      <div className="profile__info">
-        <div className="profile__avatar">
-          {user?.profilePhoto ? (
-            <img src={user.profilePhoto} alt={user.username} />
-          ) : (
-            <FiUser />
-          )}
-        </div>
-        <div>
-          <p className="profile__username">@{user?.username}</p>
-          <p className="profile__meta">
-            {user?.location || "No location set"} &middot; {user?.photos?.length || 0} photos
-          </p>
-          {user?.bio && <p className="profile__bio">{user.bio}</p>}
-        </div>
-      </div>
-
-      <nav className="profile__tabs">
-        {tabs.map((tab) => (
-          <button
-            key={tab.key}
-            className={activeTab === tab.key ? "profile__tab active" : "profile__tab"}
-            onClick={() => handleTabClick(tab.key)}
-          >
-            {tab.label}
+      <Header />
+      <div className="px-4 pt-4 pb-4">
+        <header className="profile__header">
+          <h1>{user?.username}</h1>
+          <button type="button" className="profile__edit" onClick={() => navigate("/profile/edit")}>
+            Edit
           </button>
-        ))}
-      </nav>
+        </header>
 
-      {activeTab === "portfolio" && (
-        <div className="profile__grid">
-          {(user?.photos?.length ? user.photos : new Array(12).fill(null)).map((photo, index) => (
-            <div
-              key={photo?.id ?? index}
-              className="profile__grid-item"
-              onClick={() => photo?.id && navigate(`/photos/${photo.id}`)}
-              style={{ cursor: photo?.id ? "pointer" : "default" }}
+        <div className="profile__info">
+          <div className="profile__avatar">
+            {user?.profilePhoto ? (
+              <img src={user.profilePhoto} alt={user.username} />
+            ) : (
+              <FiUser />
+            )}
+          </div>
+          <div>
+            <p className="profile__username">@{user?.username}</p>
+            <p className="profile__meta">
+              {user?.location || "No location set"} &middot; {user?.photos?.length || 0} photos
+            </p>
+            {user?.bio && <p className="profile__bio">{user.bio}</p>}
+          </div>
+        </div>
+
+        <nav className="profile__tabs">
+          {tabs.map((tab) => (
+            <button
+              key={tab.key}
+              className={activeTab === tab.key ? "profile__tab active" : "profile__tab"}
+              onClick={() => handleTabClick(tab.key)}
             >
-              {photo?.imageUrl && (
-                <img src={photo.imageUrl} alt={photo.title || "Photo"} />
-              )}
-            </div>
+              {tab.label}
+            </button>
           ))}
-        </div>
-      )}
+        </nav>
 
-      {activeTab === "map" && (
-        <div className="profile__map">
-          <MapContainer center={mapCenter} zoom={9} style={{ height: "360px", width: "100%" }}>
-            <TileLayer
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-              attribution="&copy; OpenStreetMap contributors"
-            />
-            {photosWithCoords.map((photo) => (
-              <Marker key={photo.id} position={{ lat: photo.latitude, lng: photo.longitude }}>
-                <Popup>
-                  <div className="profile__map-popup" onClick={() => navigate(`/photos/${photo.id}`)}>
-                    <img src={photo.imageUrl} alt={photo.title} className="profile__map-popup-image" />
-                    <p className="profile__map-popup-title">{photo.title}</p>
-                    <p className="profile__map-popup-meta">{photo.category}</p>
-                  </div>
-                </Popup>
-              </Marker>
+        {activeTab === "portfolio" && (
+          <div className="profile__grid">
+            {(user?.photos?.length ? user.photos : new Array(12).fill(null)).map((photo, index) => (
+              <div
+                key={photo?.id ?? index}
+                className="profile__grid-item"
+                onClick={() => photo?.id && navigate(`/photos/${photo.id}`)}
+                style={{ cursor: photo?.id ? "pointer" : "default" }}
+              >
+                {photo?.imageUrl && (
+                  <img src={photo.imageUrl} alt={photo.title || "Photo"} />
+                )}
+              </div>
             ))}
-          </MapContainer>
+          </div>
+        )}
 
-          {photosWithCoords.length === 0 && (
-            <p className="profile__map-empty">No photos with a location yet.</p>
-          )}
+        {activeTab === "map" && (
+          <div className="profile__map">
+            <MapContainer center={mapCenter} zoom={9} style={{ height: "360px", width: "100%" }}>
+              <TileLayer
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                attribution="&copy; OpenStreetMap contributors"
+              />
+              {photosWithCoords.map((photo) => (
+                <Marker key={photo.id} position={{ lat: photo.latitude, lng: photo.longitude }}>
+                  <Popup>
+                    <div className="profile__map-popup" onClick={() => navigate(`/photos/${photo.id}`)}>
+                      <img src={photo.imageUrl} alt={photo.title} className="profile__map-popup-image" />
+                      <p className="profile__map-popup-title">{photo.title}</p>
+                      <p className="profile__map-popup-meta">{photo.category}</p>
+                    </div>
+                  </Popup>
+                </Marker>
+              ))}
+            </MapContainer>
+
+            {photosWithCoords.length === 0 && (
+              <p className="profile__map-empty">No photos with a location yet.</p>
+            )}
+          </div>
+        )}
+
+        {activeTab === "saved" && (
+          <ul className="profile__saved-list">
+            {savedLocations.map((location) => (
+              <li key={location.id} className="profile__saved-item">
+                <span>{location.name}</span>
+                <span>{location.distance}</span>
+              </li>
+            ))}
+          </ul>
+        )}
         </div>
-      )}
-
-      {activeTab === "saved" && (
-        <ul className="profile__saved-list">
-          {savedLocations.map((location) => (
-            <li key={location.id} className="profile__saved-item">
-              <span>{location.name}</span>
-              <span>{location.distance}</span>
-            </li>
-          ))}
-        </ul>
-      )}
 
       <BottomNav />
     </div>

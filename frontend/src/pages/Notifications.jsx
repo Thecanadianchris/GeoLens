@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../api/axios";
 import BottomNav from "../components/BottomNav";
+import Header from "../components/Header"; 
+
 // import "./Notifications.scss";
 
 const timeAgo = (dateString) => {
@@ -92,60 +94,64 @@ function Notifications() {
 
   return (
     <div className="page notifications">
-      <header className="notifications__header">
-        <h1>Notifications</h1>
-        {notifications.some((n) => !n.read) && (
-          <button type="button" className="notifications__mark-read" onClick={handleMarkAllRead}>
-            Mark read
-          </button>
+      <Header onOpenNotifications={() => {}} onOpenSettings={() => {}} />
+      <div className="px-4 pt-4 pb-4">
+
+        <header className="notifications__header">
+          <h1>Notifications</h1>
+          {notifications.some((n) => !n.read) && (
+            <button type="button" className="notifications__mark-read" onClick={handleMarkAllRead}>
+              Mark read
+            </button>
+          )}
+        </header>
+
+        {notifications.length === 0 && (
+          <p className="notifications__empty">No notifications yet.</p>
         )}
-      </header>
 
-      {notifications.length === 0 && (
-        <p className="notifications__empty">No notifications yet.</p>
-      )}
+        {today.length > 0 && (
+          <div className="notifications__section">
+            <p className="notifications__section-title">Today</p>
+            {today.map((notification) => (
+              <div
+                key={notification.id}
+                className={
+                  notification.read
+                    ? "notifications__item"
+                    : "notifications__item notifications__item--unread"
+                }
+                onClick={() => handleNotificationClick(notification)}
+              >
+                <span className="notifications__icon">{getIcon(notification.type)}</span>
+                <span className="notifications__message">{getMessage(notification)}</span>
+                <span className="notifications__time">{timeAgo(notification.createdAt)}</span>
+              </div>
+            ))}
+          </div>
+        )}
 
-      {today.length > 0 && (
-        <div className="notifications__section">
-          <p className="notifications__section-title">Today</p>
-          {today.map((notification) => (
-            <div
-              key={notification.id}
-              className={
-                notification.read
-                  ? "notifications__item"
-                  : "notifications__item notifications__item--unread"
-              }
-              onClick={() => handleNotificationClick(notification)}
-            >
-              <span className="notifications__icon">{getIcon(notification.type)}</span>
-              <span className="notifications__message">{getMessage(notification)}</span>
-              <span className="notifications__time">{timeAgo(notification.createdAt)}</span>
-            </div>
-          ))}
+        {earlier.length > 0 && (
+          <div className="notifications__section">
+            <p className="notifications__section-title">Earlier</p>
+            {earlier.map((notification) => (
+              <div
+                key={notification.id}
+                className={
+                  notification.read
+                    ? "notifications__item"
+                    : "notifications__item notifications__item--unread"
+                }
+                onClick={() => handleNotificationClick(notification)}
+              >
+                <span className="notifications__icon">{getIcon(notification.type)}</span>
+                <span className="notifications__message">{getMessage(notification)}</span>
+                <span className="notifications__time">{timeAgo(notification.createdAt)}</span>
+              </div>
+            ))}
+          </div>
+        )}
         </div>
-      )}
-
-      {earlier.length > 0 && (
-        <div className="notifications__section">
-          <p className="notifications__section-title">Earlier</p>
-          {earlier.map((notification) => (
-            <div
-              key={notification.id}
-              className={
-                notification.read
-                  ? "notifications__item"
-                  : "notifications__item notifications__item--unread"
-              }
-              onClick={() => handleNotificationClick(notification)}
-            >
-              <span className="notifications__icon">{getIcon(notification.type)}</span>
-              <span className="notifications__message">{getMessage(notification)}</span>
-              <span className="notifications__time">{timeAgo(notification.createdAt)}</span>
-            </div>
-          ))}
-        </div>
-      )}
 
       <BottomNav />
     </div>

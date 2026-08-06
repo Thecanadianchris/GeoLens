@@ -24,6 +24,7 @@
 @use "components/buttons";
 @use "components/forms";
 @use "components/card";
+@use "components/bottom_nav";
 
 // 6. Pages (page-specific overrides)
 // @use "pages/home";
@@ -31,6 +32,17 @@
 @use "pages/landing";
 @use "pages/login";
 @use "pages/register";
+@use "pages/reset_password";
+@use "pages/upload";
+@use "pages/notifications";
+@use "pages/edit_profile";
+@use "pages/settings";
+@use "pages/profile";
+@use "pages/photo_detail";
+
+
+
+
 
 // 7. Themes (optional alternate themes)
 // @use "themes/dark";

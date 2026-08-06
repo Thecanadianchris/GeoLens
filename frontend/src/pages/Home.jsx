@@ -7,6 +7,8 @@ import iconShadow from "leaflet/dist/images/marker-shadow.png";
 import "leaflet/dist/leaflet.css";
 import api from "../api/axios";
 import BottomNav from "../components/BottomNav";
+import Header from "../components/Header"; 
+
 // import "./Home.scss";
 import {
   Bell,
@@ -23,69 +25,6 @@ import {
   CloudFog,
 } from "lucide-react";
  
-
-
-const TOKENS = {
-  ink: "#12141C",
-  inkSoft: "#191C27",
-  card: "#1E2230",
-  hairline: "rgba(245,239,227,0.10)",
-  hairlineStrong: "rgba(245,239,227,0.18)",
-  cream: "#F5EFE3",
-  creamDim: "rgba(245,239,227,0.62)",
-  creamFaint: "rgba(245,239,227,0.38)",
-  gold: "#E8A33D",
-  violet: "#8B7FC0",
-  coral: "#E2694B",
-  moss: "#7FA383",
-};
- 
-const spots = [
-  { name: "Cornwall", rating: 5 },
-  { name: "Somerset", rating: 5 },
-  { name: "Devon", rating: 4 },
-];
- 
-const nearby = [
-  {
-    tag: "Best now",
-    tone: TOKENS.coral,
-    icon: Sunrise,
-    title: "Sunset sky over a coastal overlook, golden hour",
-    place: "Dorset",
-    score: 87,
-    condition: "Clear",
-    gradient: "linear-gradient(160deg,#3A2233 0%,#8A4A3B 55%,#E8A33D 100%)",
-  },
-  {
-    tag: "Night ready",
-    tone: TOKENS.violet,
-    icon: Moon,
-    title: "Nightscape with stars and milky way",
-    place: "Cornwall",
-    score: 92,
-    condition: "Low light",
-    gradient: "linear-gradient(160deg,#0B0E1F 0%,#232A52 55%,#8B7FC0 100%)",
-  },
-  {
-    tag: "Waitlist",
-    tone: TOKENS.creamDim,
-    icon: CloudFog,
-    title: "Dramatic clouds over a mountain ridge",
-    place: "Ridge Cloud",
-    score: 79,
-    condition: "Overcast",
-    gradient: "linear-gradient(160deg,#1E222C 0%,#3C4250 55%,#6B7280 100%)",
-  },
-];
- 
-const popular = [
-  { name: "Durdle Door", rating: 4.9, distance: "12 km" },
-  { name: "Cheddar Gorge", rating: 4.8, distance: "20 km" },
-];
- 
-const filters = ["County", "Category", "Weather", "Top pics"];
-
 
 const defaultIcon = L.icon({
   iconUrl: icon,
@@ -324,19 +263,9 @@ function Home() {
 
   return (
     <div className="page home">
+      <Header />
+      <div className="px-4 pt-4 pb-4">
 
-      {/* Header */}
-      <div style={{ padding: "20px 20px 0" }}>
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <img src="/logo.svg" alt="GEOLens" className="home__logo" />
-
-          </div>
-          </div>
-      </div>
-
-      {/* Search */}
-      {/* <div className="home__search-container">
         <input
           type="text"
           className="home__search"
@@ -344,271 +273,236 @@ function Home() {
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
-      </div>
-      <input
-        type="text"
-        className="home__search"
-        placeholder="Search location, landmark, or county..."
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
-      /> */}
-
-      {/* Search */}
-        <div
-          style={{
-            marginTop: 18,
-            display: "flex",
-            alignItems: "center",
-            gap: 10,
-            border: `0.5px solid ${TOKENS.hairlineStrong}`,
-            background: TOKENS.inkSoft,
-            borderRadius: 12,
-            padding: "11px 14px",
-          }}
-        >
-          <Search size={16} color={TOKENS.creamFaint} strokeWidth={1.8} />
-          <input
-            type="text"
-            placeholder="Search location, landmark, or county..."
-            style={{
-              border: "none",
-              outline: "none",
-              background: "transparent",
-              color: TOKENS.cream,
-              fontSize: 13.5,
-              width: "100%",
-            }}
-          />
+ 
+        <div className="home__filter-row no-scrollbar flex gap-2.5 overflow-x-auto">
+          <button
+            type="button"
+            className={county ? "home__filter-chip active" : "home__filter-chip"}
+            onClick={openFilters}
+          >
+            County{county ? `: ${county}` : ""}
+          </button>
+          <button
+            type="button"
+            className={category ? "home__filter-chip active" : "home__filter-chip"}
+            onClick={openFilters}
+          >
+            Category{category ? `: ${category}` : ""}
+          </button>
+          <button
+            type="button"
+            className={weather ? "home__filter-chip active" : "home__filter-chip"}
+            onClick={openFilters}
+          >
+            Weather{weather ? `: ${weather}` : ""}
+          </button>
+          <button
+            type="button"
+            className={sortBy === "rating" ? "home__filter-chip active" : "home__filter-chip"}
+            onClick={() => setSortBy(sortBy === "rating" ? "distance" : "rating")}
+          >
+            Top 10 pics ♥
+          </button>
         </div>
 
-      <div className="home__filter-row">
-        <button
-          type="button"
-          className={county ? "home__filter-chip active" : "home__filter-chip"}
-          onClick={openFilters}
-        >
-          County{county ? `: ${county}` : ""}
-        </button>
-        <button
-          type="button"
-          className={category ? "home__filter-chip active" : "home__filter-chip"}
-          onClick={openFilters}
-        >
-          Category{category ? `: ${category}` : ""}
-        </button>
-        <button
-          type="button"
-          className={weather ? "home__filter-chip active" : "home__filter-chip"}
-          onClick={openFilters}
-        >
-          Weather{weather ? `: ${weather}` : ""}
-        </button>
-        <button
-          type="button"
-          className={sortBy === "rating" ? "home__filter-chip active" : "home__filter-chip"}
-          onClick={() => setSortBy(sortBy === "rating" ? "distance" : "rating")}
-        >
-          Top 10 pics ♥
-        </button>
-      </div>
+        {showFilters && (
+          <div className="home__filter-overlay">
+            <div className="home__filter-panel">
+              <div className="home__filter-header">
+                <h2>Filters</h2>
+                <button type="button" className="home__filter-reset" onClick={resetFilters}>
+                  Reset
+                </button>
+              </div>
 
-      {showFilters && (
-        <div className="home__filter-overlay">
-          <div className="home__filter-panel">
-            <div className="home__filter-header">
-              <h2>Filters</h2>
-              <button type="button" className="home__filter-reset" onClick={resetFilters}>
-                Reset
+              <label className="home__filter-label">County</label>
+              <select
+                className="home__filter-select"
+                value={draftCounty}
+                onChange={(e) => setDraftCounty(e.target.value)}
+              >
+                <option value="">All Counties</option>
+                {counties.map((c) => (
+                  <option key={c} value={c}>
+                    {c}
+                  </option>
+                ))}
+              </select>
+
+              <label className="home__filter-label">Category</label>
+              <select
+                className="home__filter-select"
+                value={draftCategory}
+                onChange={(e) => setDraftCategory(e.target.value)}
+              >
+                <option value="">All Categories</option>
+                {categories.map((c) => (
+                  <option key={c} value={c}>
+                    {c}
+                  </option>
+                ))}
+              </select>
+
+              <label className="home__filter-label">Weather</label>
+              <select
+                className="home__filter-select"
+                value={draftWeather}
+                onChange={(e) => setDraftWeather(e.target.value)}
+              >
+                <option value="">Any</option>
+                {weatherConditions.map((w) => (
+                  <option key={w} value={w}>
+                    {w}
+                  </option>
+                ))}
+              </select>
+
+              <label className="home__filter-label">Sort by</label>
+              <div className="home__filter-radio-group">
+                {[
+                  { key: "distance", label: "Distance" },
+                  { key: "rating", label: "Most Liked" },
+                  { key: "newest", label: "Newest" },
+                ].map((option) => (
+
+
+                  <label key={option.key} className="home__filter-radio">
+                    <input
+                      type="radio"
+                      name="sortBy"
+                      checked={draftSortBy === option.key}
+                      onChange={() => setDraftSortBy(option.key)}
+                    />
+                    {option.label}
+                  </label>
+                ))}
+              </div>
+
+              <button type="button" className="btn btn--primary home__filter-apply" onClick={applyFilters}>
+                Show {draftResultCount} Results
               </button>
             </div>
-
-            <label className="home__filter-label">County</label>
-            <select
-              className="home__filter-select"
-              value={draftCounty}
-              onChange={(e) => setDraftCounty(e.target.value)}
-            >
-              <option value="">All Counties</option>
-              {counties.map((c) => (
-                <option key={c} value={c}>
-                  {c}
-                </option>
-              ))}
-            </select>
-
-            <label className="home__filter-label">Category</label>
-            <select
-              className="home__filter-select"
-              value={draftCategory}
-              onChange={(e) => setDraftCategory(e.target.value)}
-            >
-              <option value="">All Categories</option>
-              {categories.map((c) => (
-                <option key={c} value={c}>
-                  {c}
-                </option>
-              ))}
-            </select>
-
-            <label className="home__filter-label">Weather</label>
-            <select
-              className="home__filter-select"
-              value={draftWeather}
-              onChange={(e) => setDraftWeather(e.target.value)}
-            >
-              <option value="">Any</option>
-              {weatherConditions.map((w) => (
-                <option key={w} value={w}>
-                  {w}
-                </option>
-              ))}
-            </select>
-
-            <label className="home__filter-label">Sort by</label>
-            <div className="home__filter-radio-group">
-              {[
-                { key: "distance", label: "Distance" },
-                { key: "rating", label: "Most Liked" },
-                { key: "newest", label: "Newest" },
-              ].map((option) => (
-
-
-                <label key={option.key} className="home__filter-radio">
-                  <input
-                    type="radio"
-                    name="sortBy"
-                    checked={draftSortBy === option.key}
-                    onChange={() => setDraftSortBy(option.key)}
-                  />
-                  {option.label}
-                </label>
-              ))}
-            </div>
-
-            <button type="button" className="btn btn--primary home__filter-apply" onClick={applyFilters}>
-              Show {draftResultCount} Results
-            </button>
           </div>
-        </div>
-      )}
+        )}
 
-      {searchResults ? (
-        <div className="home__search-results">
-          <p className="home__section-title">
-            {searchResults.length} result{searchResults.length !== 1 ? "s" : ""}
-          </p>
-          {searchResults.map((photo) => (
-            <div
-              key={photo.id}
-              className="home__search-result"
-              onClick={() => navigate(`/photos/${photo.id}`)}
-            >
-              <img src={photo.imageUrl} alt={photo.title} className="home__search-result-image" />
-              <div>
-                <p className="home__search-result-title">{photo.title}</p>
-                <p className="home__search-result-location">{photo.location}</p>
+        {searchResults ? (
+          <div className="home__search-results">
+            <p className="home__section-title">
+              {searchResults.length} result{searchResults.length !== 1 ? "s" : ""}
+            </p>
+            {searchResults.map((photo) => (
+              <div
+                key={photo.id}
+                className="home__search-result"
+                onClick={() => navigate(`/photos/${photo.id}`)}
+              >
+                <img src={photo.imageUrl} alt={photo.title} className="home__search-result-image" />
+                <div>
+                  <p className="home__search-result-title">{photo.title}</p>
+                  <p className="home__search-result-location">{photo.location}</p>
+                </div>
               </div>
+            ))}
+          </div>
+        ) : (
+          <>
+            <div className="home__map z-index-0">
+              <MapContainer center={position} zoom={9} style={{ height: "440px", width: "100%", zIndex: 0 }}>
+                <TileLayer
+                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                  attribution="&copy; OpenStreetMap contributors"
+                />
+                {photosWithCoords.map((photo) => (
+                  <Marker key={photo.id} position={{ lat: photo.latitude, lng: photo.longitude }}>
+                    <Popup>
+                      <div className="home__map-popup" onClick={() => navigate(`/photos/${photo.id}`)}>
+                        <img src={photo.imageUrl} alt={photo.title} className="home__map-popup-image" />
+                        <p className="home__map-popup-title">{photo.title}</p>
+                        <p className="home__map-popup-meta">
+                          {photo.category} &middot; ♥ {photo.likeCount || 0}
+                        </p>
+                      </div>
+                    </Popup>
+                  </Marker>
+                ))}
+              </MapContainer>
             </div>
-          ))}
-        </div>
-      ) : (
-        <>
-          <div className="home__map">
-            <MapContainer center={position} zoom={9} style={{ height: "440px", width: "100%" }}>
-              <TileLayer
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                attribution="&copy; OpenStreetMap contributors"
-              />
-              {photosWithCoords.map((photo) => (
-                <Marker key={photo.id} position={{ lat: photo.latitude, lng: photo.longitude }}>
-                  <Popup>
-                    <div className="home__map-popup" onClick={() => navigate(`/photos/${photo.id}`)}>
-                      <img src={photo.imageUrl} alt={photo.title} className="home__map-popup-image" />
-                      <p className="home__map-popup-title">{photo.title}</p>
-                      <p className="home__map-popup-meta">
-                        {photo.category} &middot; ♥ {photo.likeCount || 0}
-                      </p>
+
+            {bestSpots.length > 0 && (
+              <div className="home__section">
+                <p className="home__section-title">Today's best photography spots</p>
+                {bestSpots.map((photo) => (
+                  <div
+                    key={photo.id}
+                    className="home__best-row"
+                    onClick={() => navigate(`/photos/${photo.id}`)}
+                  >
+                    <p className="home__best-location">{photo.location}</p>
+                    <p className="home__best-meta">♥ {photo.likeCount || 0}</p>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {nearbyPhotos.length > 0 && (
+              <div className="home__section">
+                <div className="home__section-header">
+                  <p className="home__section-title">Nearby Photos</p>
+                </div>
+                <div className="home__card-row">
+                  {nearbyPhotos.map((photo) => (
+                    <div
+                      key={photo.id}
+                      className="home__card"
+                      onClick={() => navigate(`/photos/${photo.id}`)}
+                    >
+                      <img src={photo.imageUrl} alt={photo.title} className="home__card-image" />
+                      <p className="home__card-location">{photo.location}</p>
+                      <p className="home__card-score">♥ {photo.likeCount || 0}</p>
                     </div>
-                  </Popup>
-                </Marker>
-              ))}
-            </MapContainer>
-          </div>
-
-          {bestSpots.length > 0 && (
-            <div className="home__section">
-              <p className="home__section-title">Today's best photography spots</p>
-              {bestSpots.map((photo) => (
-                <div
-                  key={photo.id}
-                  className="home__best-row"
-                  onClick={() => navigate(`/photos/${photo.id}`)}
-                >
-                  <p className="home__best-location">{photo.location}</p>
-                  <p className="home__best-meta">♥ {photo.likeCount || 0}</p>
+                  ))}
                 </div>
-              ))}
-            </div>
-          )}
-
-          {nearbyPhotos.length > 0 && (
-            <div className="home__section">
-              <div className="home__section-header">
-                <p className="home__section-title">Nearby Photos</p>
               </div>
-              <div className="home__card-row">
-                {nearbyPhotos.map((photo) => (
-                  <div
-                    key={photo.id}
-                    className="home__card"
-                    onClick={() => navigate(`/photos/${photo.id}`)}
-                  >
-                    <img src={photo.imageUrl} alt={photo.title} className="home__card-image" />
-                    <p className="home__card-location">{photo.location}</p>
-                    <p className="home__card-score">♥ {photo.likeCount || 0}</p>
+            )}
+
+            {popularLocations.length > 0 && (
+              <div className="home__section">
+                <p className="home__section-title">Popular locations</p>
+                {popularLocations.map((item) => (
+                  <div key={item.location} className="home__popular-row">
+                    <p className="home__popular-location">{item.location}</p>
+                    <p className="home__popular-meta">
+                      ♥ {item.totalLikes}
+                      {item.distance !== null ? ` · ${Math.round(item.distance)} KM` : ""}
+                    </p>
                   </div>
                 ))}
               </div>
-            </div>
-          )}
+            )}
 
-          {popularLocations.length > 0 && (
-            <div className="home__section">
-              <p className="home__section-title">Popular locations</p>
-              {popularLocations.map((item) => (
-                <div key={item.location} className="home__popular-row">
-                  <p className="home__popular-location">{item.location}</p>
-                  <p className="home__popular-meta">
-                    ♥ {item.totalLikes}
-                    {item.distance !== null ? ` · ${Math.round(item.distance)} KM` : ""}
-                  </p>
+            {recentlyAdded.length > 0 && (
+              <div className="home__section">
+                <div className="home__section-header">
+                  <p className="home__section-title">Recently Added Photos</p>
                 </div>
-              ))}
-            </div>
-          )}
-
-          {recentlyAdded.length > 0 && (
-            <div className="home__section">
-              <div className="home__section-header">
-                <p className="home__section-title">Recently Added Photos</p>
+                <div className="home__card-row">
+                  {recentlyAdded.map((photo) => (
+                    <div
+                      key={photo.id}
+                      className="home__card"
+                      onClick={() => navigate(`/photos/${photo.id}`)}
+                    >
+                      <img src={photo.imageUrl} alt={photo.title} className="home__card-image" />
+                      <p className="home__card-location">{photo.location}</p>
+                      <p className="home__card-score">{photo.category}</p>
+                    </div>
+                  ))}
+                </div>
               </div>
-              <div className="home__card-row">
-                {recentlyAdded.map((photo) => (
-                  <div
-                    key={photo.id}
-                    className="home__card"
-                    onClick={() => navigate(`/photos/${photo.id}`)}
-                  >
-                    <img src={photo.imageUrl} alt={photo.title} className="home__card-image" />
-                    <p className="home__card-location">{photo.location}</p>
-                    <p className="home__card-score">{photo.category}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-        </>
-      )}
+            )}
+          </>
+        )}
+      </div>
 
       <BottomNav />
     </div>

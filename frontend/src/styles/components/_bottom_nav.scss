@@ -7,7 +7,7 @@
   left: 0;
   right: 0;
   @include flex(row, space-around, center);
-  background: $color-white;
+  background: var(--ink);
   border-top: $border-width solid $color-gray-300;
   padding: spacer(2) 0;
   z-index: $z-index-fixed;
@@ -16,7 +16,7 @@
     @include flex(column, center, center);
     gap: spacer(1);
     text-decoration: none;
-    color: $color-gray-500;
+    color: $color-white;
     font-size: $font-size-sm;
 
     svg {

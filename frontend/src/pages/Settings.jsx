@@ -1,6 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import BottomNav from "../components/BottomNav";
+import Header from "../components/Header"; 
+
 // import "./Settings.scss";
 
 const accountRows = [
@@ -43,41 +45,44 @@ function Settings() {
 
   return (
     <div className="page settings">
-      <header className="settings__header">
-        <button type="button" className="settings__back" onClick={handleBack}>
-          <FiChevronLeft />
+      <Header />
+      <div className="px-4 pt-4 pb-4">
+        <header className="settings__header">
+          <button type="button" className="settings__back" onClick={handleBack}>
+            <FiChevronLeft />
+          </button>
+          <h1>Settings</h1>
+        </header>
+
+        <section className="settings__section">
+          <h2 className="settings__section-title">Account</h2>
+          {accountRows.map((row) => (
+            <SettingsRow
+              key={row.label}
+              label={row.label}
+              onClick={() => row.path && navigate(row.path)}
+            />
+          ))}
+        </section>
+
+        <section className="settings__section">
+          <h2 className="settings__section-title">Preferences</h2>
+          {preferenceRows.map((row) => (
+            <SettingsRow key={row.label} label={row.label} value={row.value} />
+          ))}
+        </section>
+
+        <section className="settings__section">
+          <h2 className="settings__section-title">About</h2>
+          {aboutRows.map((row) => (
+            <SettingsRow key={row.label} label={row.label} />
+          ))}
+        </section>
+
+        <button type="button" className="settings__logout" onClick={handleLogout}>
+          Log Out
         </button>
-        <h1>Settings</h1>
-      </header>
-
-      <section className="settings__section">
-        <h2 className="settings__section-title">Account</h2>
-        {accountRows.map((row) => (
-          <SettingsRow
-            key={row.label}
-            label={row.label}
-            onClick={() => row.path && navigate(row.path)}
-          />
-        ))}
-      </section>
-
-      <section className="settings__section">
-        <h2 className="settings__section-title">Preferences</h2>
-        {preferenceRows.map((row) => (
-          <SettingsRow key={row.label} label={row.label} value={row.value} />
-        ))}
-      </section>
-
-      <section className="settings__section">
-        <h2 className="settings__section-title">About</h2>
-        {aboutRows.map((row) => (
-          <SettingsRow key={row.label} label={row.label} />
-        ))}
-      </section>
-
-      <button type="button" className="settings__logout" onClick={handleLogout}>
-        Log Out
-      </button>
+      </div>
 
       <BottomNav />
     </div>

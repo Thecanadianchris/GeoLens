@@ -3,6 +3,10 @@ import { useNavigate } from "react-router-dom";
 import { FiChevronLeft, FiUser } from "react-icons/fi";
 import api from "../api/axios";
 // import "./EditProfile.scss";
+import BottomNav from "../components/BottomNav";
+import Header from "../components/Header"; 
+
+
 
 function EditProfile() {
   const navigate = useNavigate();
@@ -83,66 +87,70 @@ function EditProfile() {
 
   return (
     <div className="page edit-profile">
-      <header className="edit-profile__header">
-        <button type="button" className="edit-profile__back" onClick={() => navigate("/profile")}>
-          <FiChevronLeft />
-        </button>
-        <h1>Edit Profile</h1>
-      </header>
+      <Header />
+      
+      <div className="px-4 pt-4 pb-4">
+        <header className="edit-profile__header">
+          <button type="button" className="edit-profile__back" onClick={() => navigate("/profile")}>
+            <FiChevronLeft />
+          </button>
+          <h1>Edit Profile</h1>
+        </header>
 
-      <div className="edit-profile__avatar-row">
-        <label className="edit-profile__avatar" htmlFor="avatarInput">
-          {avatarPreview ? <img src={avatarPreview} alt="Avatar preview" /> : <FiUser />}
-        </label>
-        <div>
-          <label className="edit-profile__avatar-change" htmlFor="avatarInput">
-            Change photo
+        <div className="edit-profile__avatar-row">
+          <label className="edit-profile__avatar" htmlFor="avatarInput">
+            {avatarPreview ? <img src={avatarPreview} alt="Avatar preview" /> : <FiUser />}
           </label>
+          <div>
+            <label className="edit-profile__avatar-change" htmlFor="avatarInput">
+              Change photo
+            </label>
+            <input
+              id="avatarInput"
+              type="file"
+              accept="image/*"
+              onChange={handleAvatarChange}
+              hidden
+            />
+          </div>
+        </div>
+
+        <div className="field">
+          <label htmlFor="username">Username</label>
+          <input id="username" value={username} onChange={(e) => setUsername(e.target.value)} />
+        </div>
+
+        <div className="field">
+          <label htmlFor="title">Title</label>
           <input
-            id="avatarInput"
-            type="file"
-            accept="image/*"
-            onChange={handleAvatarChange}
-            hidden
+            id="title"
+            placeholder="e.g. Landscape photographer"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
           />
         </div>
+
+        <div className="field">
+          <label htmlFor="location">Location</label>
+          <input
+            id="location"
+            placeholder="e.g. Bristol, UK"
+            value={location}
+            onChange={(e) => setLocation(e.target.value)}
+          />
+        </div>
+
+        <div className="field">
+          <label htmlFor="bio">Bio</label>
+          <textarea id="bio" rows={4} value={bio} onChange={(e) => setBio(e.target.value)} />
+        </div>
+
+        {serverError && <p className="error">{serverError}</p>}
+
+        <button type="button" className="btn btn--primary" disabled={saving} onClick={handleSave}>
+          {saving ? "Saving..." : "Save Changes"}
+        </button>
       </div>
-
-      <div className="field">
-        <label htmlFor="username">Username</label>
-        <input id="username" value={username} onChange={(e) => setUsername(e.target.value)} />
-      </div>
-
-      <div className="field">
-        <label htmlFor="title">Title</label>
-        <input
-          id="title"
-          placeholder="e.g. Landscape photographer"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-        />
-      </div>
-
-      <div className="field">
-        <label htmlFor="location">Location</label>
-        <input
-          id="location"
-          placeholder="e.g. Bristol, UK"
-          value={location}
-          onChange={(e) => setLocation(e.target.value)}
-        />
-      </div>
-
-      <div className="field">
-        <label htmlFor="bio">Bio</label>
-        <textarea id="bio" rows={4} value={bio} onChange={(e) => setBio(e.target.value)} />
-      </div>
-
-      {serverError && <p className="error">{serverError}</p>}
-
-      <button type="button" className="btn btn--primary" disabled={saving} onClick={handleSave}>
-        {saving ? "Saving..." : "Save Changes"}
-      </button>
     </div>
   );
 }

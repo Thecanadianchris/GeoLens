@@ -2,8 +2,9 @@
 
 .profile {
   max-width: 420px;
+  flex-grow: 1;
   margin: 0 auto;
-  padding: spacer(4) spacer(4) 5rem;
+  // padding: spacer(4) spacer(4) 5rem;
   font-family: $font-family-base;
 
   &__header {

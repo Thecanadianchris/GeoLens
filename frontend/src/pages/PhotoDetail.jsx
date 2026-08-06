@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import api from "../api/axios";
 import BottomNav from "../components/BottomNav";
+import Header from "../components/Header"; 
+
 // import "./PhotoDetail.scss";
 import { FiShare2 } from "react-icons/fi";
 
@@ -313,262 +315,266 @@ function PhotoDetail() {
 
   return (
     <div className="page photo-detail">
-      <header className="photo-detail__header">
-        <button type="button" className="photo-detail__back" onClick={() => navigate(-1)}>
-          &larr;
-        </button>
-        <h1>{isEditing ? "Edit photo" : photo.title || "Photo"}</h1>
+      <Header />
+      <div className="px-4 pt-4 pb-4">
 
-        {!isEditing && isOwner && (
-          <button type="button" className="photo-detail__edit" onClick={() => setIsEditing(true)}>
-            Edit
+        <header className="photo-detail__header">
+          <button type="button" className="photo-detail__back" onClick={() => navigate(-1)}>
+            &larr;
           </button>
-        )}
-      </header>
+          <h1>{isEditing ? "Edit photo" : photo.title || "Photo"}</h1>
 
-      <img src={photo.imageUrl} alt={photo.title || "Photo"} className="photo-detail__hero" />
-
-      {!isEditing && (
-        <>
-          <div className="photo-detail__meta">
-            <p className="photo-detail__location">{photo.location}</p>
-            <p className="photo-detail__category">{photo.category}</p>
-            {photo.dateTaken && <p className="photo-detail__category">Taken {photo.dateTaken}</p>}
-          </div>
-
-
-          {photo.cameraDetails && (
-            <div className="photo-detail__section">
-              <p className="photo-detail__section-title">Camera details</p>
-              <p>{photo.cameraDetails}</p>
-            </div>
-          )}
-
-          {photo.description && (
-            <div className="photo-detail__section">
-              <p className="photo-detail__section-title">Caption</p>
-              <p>{photo.description}</p>
-            </div>
-          )}
-
-          <div className="photo-detail__actions-row">
-            <button
-              type="button"
-              className={isLiked ? "photo-detail__like active" : "photo-detail__like"}
-              onClick={handleToggleLike}
-              disabled={likeLoading}
-            >
-              {isLiked ? "♥" : "♡"} {isLiked ? "Liked" : "Like"} &middot; {likeCount}
+          {!isEditing && isOwner && (
+            <button type="button" className="photo-detail__edit" onClick={() => setIsEditing(true)}>
+              Edit
             </button>
+          )}
+        </header>
 
-            <button type="button" className="photo-detail__share" onClick={handleShare}>
-              <FiShare2 />
-              Share
-            </button>
+        <img src={photo.imageUrl} alt={photo.title || "Photo"} className="photo-detail__hero" />
 
-            {isOwner && (
+        {!isEditing && (
+          <>
+            <div className="photo-detail__meta">
+              <p className="photo-detail__location">{photo.location}</p>
+              <p className="photo-detail__category">{photo.category}</p>
+              {photo.dateTaken && <p className="photo-detail__category">Taken {photo.dateTaken}</p>}
+            </div>
+
+
+            {photo.cameraDetails && (
+              <div className="photo-detail__section">
+                <p className="photo-detail__section-title">Camera details</p>
+                <p>{photo.cameraDetails}</p>
+              </div>
+            )}
+
+            {photo.description && (
+              <div className="photo-detail__section">
+                <p className="photo-detail__section-title">Caption</p>
+                <p>{photo.description}</p>
+              </div>
+            )}
+
+            <div className="photo-detail__actions-row">
               <button
                 type="button"
-                className="photo-detail__delete"
-                onClick={handleDelete}
-                disabled={deleting}
+                className={isLiked ? "photo-detail__like active" : "photo-detail__like"}
+                onClick={handleToggleLike}
+                disabled={likeLoading}
               >
-                {deleting ? "Deleting..." : "Delete photo"}
+                {isLiked ? "♥" : "♡"} {isLiked ? "Liked" : "Like"} &middot; {likeCount}
               </button>
-            )}
-          </div>
 
-          <div className="photo-detail__section">
-            <p className="photo-detail__section-title">
-              Comments {comments.length > 0 && `(${comments.length})`}
-            </p>
+              <button type="button" className="photo-detail__share" onClick={handleShare}>
+                <FiShare2 />
+                Share
+              </button>
 
-            {commentsLoading && <p className="photo-detail__label">Loading comments...</p>}
+              {isOwner && (
+                <button
+                  type="button"
+                  className="photo-detail__delete"
+                  onClick={handleDelete}
+                  disabled={deleting}
+                >
+                  {deleting ? "Deleting..." : "Delete photo"}
+                </button>
+              )}
+            </div>
 
-            {!commentsLoading && comments.length === 0 && (
-              <p className="photo-detail__label">No comments yet.</p>
-            )}
+            <div className="photo-detail__section">
+              <p className="photo-detail__section-title">
+                Comments {comments.length > 0 && `(${comments.length})`}
+              </p>
 
-            {!commentsLoading &&
-              comments.map((comment) => (
-                <div key={comment.id} className="photo-detail__comment">
-                  <div>
-                    <p className="photo-detail__comment-username">
-                      @{comment.User?.username || "user"}
-                    </p>
-                    <p className="photo-detail__comment-text">{comment.content}</p>
+              {commentsLoading && <p className="photo-detail__label">Loading comments...</p>}
+
+              {!commentsLoading && comments.length === 0 && (
+                <p className="photo-detail__label">No comments yet.</p>
+              )}
+
+              {!commentsLoading &&
+                comments.map((comment) => (
+                  <div key={comment.id} className="photo-detail__comment">
+                    <div>
+                      <p className="photo-detail__comment-username">
+                        @{comment.User?.username || "user"}
+                      </p>
+                      <p className="photo-detail__comment-text">{comment.content}</p>
+                    </div>
+                    {comment.userId === currentUserId && (
+                      <button
+                        type="button"
+                        className="photo-detail__comment-delete"
+                        onClick={() => handleDeleteComment(comment.id)}
+                      >
+                        Delete
+                      </button>
+                    )}
                   </div>
-                  {comment.userId === currentUserId && (
-                    <button
-                      type="button"
-                      className="photo-detail__comment-delete"
-                      onClick={() => handleDeleteComment(comment.id)}
-                    >
-                      Delete
-                    </button>
-                  )}
-                </div>
-              ))}
+                ))}
 
-            <div className="photo-detail__comment-form">
-              <input
-                type="text"
-                className="photo-detail__input"
-                placeholder="Add a comment..."
-                value={commentText}
-                onChange={(e) => setCommentText(e.target.value)}
-              />
+              <div className="photo-detail__comment-form">
+                <input
+                  type="text"
+                  className="photo-detail__input"
+                  placeholder="Add a comment..."
+                  value={commentText}
+                  onChange={(e) => setCommentText(e.target.value)}
+                />
+                <button
+                  type="button"
+                  className="photo-detail__add-btn"
+                  onClick={handlePostComment}
+                  disabled={postingComment}
+                >
+                  {postingComment ? "..." : "Post"}
+                </button>
+              </div>
+            </div>
+          </>
+        )}
+
+        {isEditing && (
+          <div className="photo-detail__form">
+            <label className="photo-detail__label">Title</label>
+            <input
+              type="text"
+              className="photo-detail__input"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+            />
+
+            <label className="photo-detail__label">Location</label>
+            <input
+              type="text"
+              className="photo-detail__input"
+              value={location}
+              onChange={(e) => setLocation(e.target.value)}
+            />
+
+            <label className="photo-detail__label">Category</label>
+            <select
+              className="photo-detail__input"
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+            >
+              {categories.map((cat) => (
+                <option key={cat} value={cat}>
+                  {cat}
+                </option>
+              ))}
+            </select>
+
+            <label className="photo-detail__label">Date photo was taken</label>
+            <input
+              type="date"
+              className="photo-detail__input"
+              value={editDate}
+              onChange={(e) => setEditDate(e.target.value)}
+            />
+
+            <label className="photo-detail__label">Weather (auto-filled)</label>
+            {editWeatherLoading && <p className="photo-detail__label">Loading weather...</p>}
+            {!editWeatherLoading && editWeather && (
+              <div className="photo-detail__weather">
+                <span>{editWeather.temperature}° {editWeather.condition}</span>
+                <span>Wind {editWeather.windSpeed} mph</span>
+                <span>Sunset {editWeather.sunset}</span>
+              </div>
+            )}
+            {!editWeatherLoading && !editWeather && (
+              <p className="photo-detail__label">No weather data available for this date.</p>
+            )}
+
+            <label className="photo-detail__label">Camera / lens</label>
+            <select
+              className="photo-detail__input"
+              value={showLensOther ? OTHER_VALUE : cameraLens}
+              onChange={handleLensChange}
+            >
+              <option value="" disabled>
+                Select camera / lens
+              </option>
+              {lensOptions.map((option) => (
+                <option key={option} value={option}>
+                  {option}
+                </option>
+              ))}
+              <option value={OTHER_VALUE}>Other (add new)</option>
+            </select>
+
+            {showLensOther && (
+              <div className="photo-detail__other-row">
+                <input
+                  type="text"
+                  className="photo-detail__input"
+                  placeholder="Type new camera / lens"
+                  value={customLensInput}
+                  onChange={(e) => setCustomLensInput(e.target.value)}
+                />
+                <button type="button" className="photo-detail__add-btn" onClick={handleAddLens}>
+                  Add
+                </button>
+              </div>
+            )}
+
+            <label className="photo-detail__label">Settings</label>
+            <select
+              className="photo-detail__input"
+              value={showSettingsOther ? OTHER_VALUE : cameraSettings}
+              onChange={handleSettingsChange}
+            >
+              <option value="" disabled>
+                Select settings
+              </option>
+              {settingsOptions.map((option) => (
+                <option key={option} value={option}>
+                  {option}
+                </option>
+              ))}
+              <option value={OTHER_VALUE}>Other (add new)</option>
+            </select>
+
+            {showSettingsOther && (
+              <div className="photo-detail__other-row">
+                <input
+                  type="text"
+                  className="photo-detail__input"
+                  placeholder="Type new settings"
+                  value={customSettingsInput}
+                  onChange={(e) => setCustomSettingsInput(e.target.value)}
+                />
+                <button type="button" className="photo-detail__add-btn" onClick={handleAddSettings}>
+                  Add
+                </button>
+              </div>
+            )}
+
+            <label className="photo-detail__label">Caption</label>
+            <textarea
+              className="photo-detail__textarea"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+            />
+
+            <div className="photo-detail__form-actions">
               <button
                 type="button"
-                className="photo-detail__add-btn"
-                onClick={handlePostComment}
-                disabled={postingComment}
+                className="btn btn--secondary"
+                onClick={() => setIsEditing(false)}
+                disabled={saving}
               >
-                {postingComment ? "..." : "Post"}
+                Cancel
+              </button>
+              <button type="button" className="btn btn--primary" onClick={handleSave} disabled={saving}>
+                {saving ? "Saving..." : "Save"}
               </button>
             </div>
           </div>
-        </>
-      )}
-
-      {isEditing && (
-        <div className="photo-detail__form">
-          <label className="photo-detail__label">Title</label>
-          <input
-            type="text"
-            className="photo-detail__input"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-          />
-
-          <label className="photo-detail__label">Location</label>
-          <input
-            type="text"
-            className="photo-detail__input"
-            value={location}
-            onChange={(e) => setLocation(e.target.value)}
-          />
-
-          <label className="photo-detail__label">Category</label>
-          <select
-            className="photo-detail__input"
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-          >
-            {categories.map((cat) => (
-              <option key={cat} value={cat}>
-                {cat}
-              </option>
-            ))}
-          </select>
-
-          <label className="photo-detail__label">Date photo was taken</label>
-          <input
-            type="date"
-            className="photo-detail__input"
-            value={editDate}
-            onChange={(e) => setEditDate(e.target.value)}
-          />
-
-          <label className="photo-detail__label">Weather (auto-filled)</label>
-          {editWeatherLoading && <p className="photo-detail__label">Loading weather...</p>}
-          {!editWeatherLoading && editWeather && (
-            <div className="photo-detail__weather">
-              <span>{editWeather.temperature}° {editWeather.condition}</span>
-              <span>Wind {editWeather.windSpeed} mph</span>
-              <span>Sunset {editWeather.sunset}</span>
-            </div>
-          )}
-          {!editWeatherLoading && !editWeather && (
-            <p className="photo-detail__label">No weather data available for this date.</p>
-          )}
-
-          <label className="photo-detail__label">Camera / lens</label>
-          <select
-            className="photo-detail__input"
-            value={showLensOther ? OTHER_VALUE : cameraLens}
-            onChange={handleLensChange}
-          >
-            <option value="" disabled>
-              Select camera / lens
-            </option>
-            {lensOptions.map((option) => (
-              <option key={option} value={option}>
-                {option}
-              </option>
-            ))}
-            <option value={OTHER_VALUE}>Other (add new)</option>
-          </select>
-
-          {showLensOther && (
-            <div className="photo-detail__other-row">
-              <input
-                type="text"
-                className="photo-detail__input"
-                placeholder="Type new camera / lens"
-                value={customLensInput}
-                onChange={(e) => setCustomLensInput(e.target.value)}
-              />
-              <button type="button" className="photo-detail__add-btn" onClick={handleAddLens}>
-                Add
-              </button>
-            </div>
-          )}
-
-          <label className="photo-detail__label">Settings</label>
-          <select
-            className="photo-detail__input"
-            value={showSettingsOther ? OTHER_VALUE : cameraSettings}
-            onChange={handleSettingsChange}
-          >
-            <option value="" disabled>
-              Select settings
-            </option>
-            {settingsOptions.map((option) => (
-              <option key={option} value={option}>
-                {option}
-              </option>
-            ))}
-            <option value={OTHER_VALUE}>Other (add new)</option>
-          </select>
-
-          {showSettingsOther && (
-            <div className="photo-detail__other-row">
-              <input
-                type="text"
-                className="photo-detail__input"
-                placeholder="Type new settings"
-                value={customSettingsInput}
-                onChange={(e) => setCustomSettingsInput(e.target.value)}
-              />
-              <button type="button" className="photo-detail__add-btn" onClick={handleAddSettings}>
-                Add
-              </button>
-            </div>
-          )}
-
-          <label className="photo-detail__label">Caption</label>
-          <textarea
-            className="photo-detail__textarea"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-          />
-
-          <div className="photo-detail__form-actions">
-            <button
-              type="button"
-              className="btn btn--secondary"
-              onClick={() => setIsEditing(false)}
-              disabled={saving}
-            >
-              Cancel
-            </button>
-            <button type="button" className="btn btn--primary" onClick={handleSave} disabled={saving}>
-              {saving ? "Saving..." : "Save"}
-            </button>
-          </div>
-        </div>
-      )}
+        )}
+      </div>
 
       <BottomNav />
     </div>

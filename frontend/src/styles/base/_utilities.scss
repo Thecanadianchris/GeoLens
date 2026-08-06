@@ -53,3 +53,14 @@
   .text-#{$name} { color: $color; }
   .bg-#{$name}   { background-color: $color; }
 }
+
+// hide scrollbars on horizontal carousels but keep them scrollable
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.z-index-0 { z-index: 0 !important; }

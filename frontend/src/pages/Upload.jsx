@@ -7,6 +7,8 @@ import iconShadow from "leaflet/dist/images/marker-shadow.png";
 import "leaflet/dist/leaflet.css";
 import api from "../api/axios";
 import BottomNav from "../components/BottomNav";
+import Header from "../components/Header"; 
+
 // import "./Upload.scss";
 
 const defaultIcon = L.icon({
@@ -269,218 +271,220 @@ function Upload() {
 
   return (
     <div className="page upload">
-      <header className="upload__header">
-        <button type="button" className="upload__back" onClick={() => navigate(-1)}>
-          &larr;
-        </button>
-        <h1>Upload &middot; {step} of 3</h1>
-      </header>
+      <Header />
 
-      {step === 1 && (
-        <>
-          <div className="upload__section-title">
-            <span>Recent</span>
-          </div>
-
-          <label className="upload__picker">
-            Choose photos
-            <input type="file" accept="image/*" multiple onChange={handleFileChange} hidden />
-          </label>
-
-          {selectedFiles.length > 0 && (
-            <div className="upload__grid">
-              {selectedFiles.map((file, index) => (
-                <img
-                  key={index}
-                  src={URL.createObjectURL(file)}
-                  alt={`Selected ${index + 1}`}
-                  className="upload__grid-item"
-                />
-              ))}
-            </div>
-          )}
-
-          <button
-            type="button"
-            className="btn btn--primary upload__continue"
-            disabled={selectedFiles.length === 0}
-            onClick={() => setStep(2)}
-          >
-            Continue &middot; ({selectedFiles.length}) Selected
+      <div className="px-4 pt-4 pb-4">
+        <header className="upload__header">
+          <button type="button" className="upload__back" onClick={() => navigate(-1)}>
+            &larr;
           </button>
-        </>
-      )}
+          <h1>Upload &middot; {step} of 3</h1>
+        </header>
 
-      {step === 2 && (
-        <>
-          <p className="upload__label">Search address or postcode</p>
-          <div className="upload__other-row">
-            <input
-              type="text"
-              className="upload__input"
-              placeholder="e.g. Durdle Door, or BH20 5PU"
-              value={addressQuery}
-              onChange={(e) => setAddressQuery(e.target.value)}
-              onKeyDown={handleAddressKeyDown}
-            />
+        {step === 1 && (
+          <>
+            <div className="upload__section-title">
+              <span>Recent</span>
+            </div>
+
+            <label className="upload__picker">
+              Choose photos
+              <input type="file" accept="image/*" multiple onChange={handleFileChange} hidden />
+            </label>
+
+            {selectedFiles.length > 0 && (
+              <div className="upload__grid">
+                {selectedFiles.map((file, index) => (
+                  <img
+                    key={index}
+                    src={URL.createObjectURL(file)}
+                    alt={`Selected ${index + 1}`}
+                    className="upload__grid-item"
+                  />
+                ))}
+              </div>
+            )}
+
             <button
               type="button"
-              className="upload__add-btn"
-              onClick={handleAddressSearch}
-              disabled={searchingAddress}
+              className="btn btn--primary upload__continue"
+              disabled={selectedFiles.length === 0}
+              onClick={() => setStep(2)}
             >
-              {searchingAddress ? "..." : "Search"}
+              Continue &middot; ({selectedFiles.length}) Selected
             </button>
-          </div>
-          {addressError && <p className="upload__label">{addressError}</p>}
+          </>
+        )}
 
-          <p className="upload__label">Detected location (GPS)</p>
-          <p className="upload__location-name">
-            {locating ? "Locating..." : locationName || "Location unavailable"}
-          </p>
-
-          {position && (
-            <div className="upload__map">
-              <MapContainer center={position} zoom={14} style={{ height: "220px", width: "100%" }}>
-                <TileLayer
-                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                  attribution="&copy; OpenStreetMap contributors"
-                />
-                <Marker position={position} draggable eventHandlers={{ dragend: handleMarkerDrag }} />
-                <RecenterMap position={position} />
-              </MapContainer>
-              <p className="upload__map-hint">Drag the pin to adjust</p>
-            </div>
-          )}
-
-          <p className="upload__label">Category</p>
-          <div className="upload__category-list">
-            {categories.map((cat) => (
+        {step === 2 && (
+          <>
+            <p className="upload__label">Search address or postcode</p>
+            <div className="upload__other-row">
+              <input
+                type="text"
+                className="upload__input"
+                placeholder="e.g. Durdle Door, or BH20 5PU"
+                value={addressQuery}
+                onChange={(e) => setAddressQuery(e.target.value)}
+                onKeyDown={handleAddressKeyDown}
+              />
               <button
-                key={cat}
                 type="button"
-                className={category === cat ? "upload__category active" : "upload__category"}
-                onClick={() => setCategory(cat)}
+                className="upload__add-btn"
+                onClick={handleAddressSearch}
+                disabled={searchingAddress}
               >
-                {cat}
+                {searchingAddress ? "..." : "Search"}
               </button>
-            ))}
-          </div>
-
-          <button
-            type="button"
-            className="btn btn--primary upload__continue"
-            disabled={!position || !category}
-            onClick={() => setStep(3)}
-          >
-            Continue
-          </button>
-        </>
-      )}
-
-      {step === 3 && (
-        <>
-          <p className="upload__label">Date photo was taken</p>
-          <input
-            type="date"
-            className="upload__input"
-            value={photoDate}
-            onChange={(e) => setPhotoDate(e.target.value)}
-          />
-
-          <p className="upload__section-title">Weather (auto-filled)</p>
-          {weatherLoading && <p className="upload__label">Loading weather...</p>}
-          {!weatherLoading && weather && (
-            <div className="upload__weather-grid">
-              <div className="upload__weather-item">{weather.temperature}° {weather.condition}</div>
-              <div className="upload__weather-item">Wind {weather.windSpeed} mph</div>
-              <div className="upload__weather-item">Sunset {weather.sunset}</div>
             </div>
-          )}
-          {!weatherLoading && !weather && (
-            <p className="upload__label">No weather data available for this date.</p>
-          )}
+            {addressError && <p className="upload__label">{addressError}</p>}
 
-          <p className="upload__section-title">Camera details</p>
+            <p className="upload__label">Detected location (GPS)</p>
+            <p className="upload__location-name">
+              {locating ? "Locating..." : locationName || "Location unavailable"}
+            </p>
 
-          <select className="upload__select" value={showLensOther ? OTHER_VALUE : cameraLens} onChange={handleLensChange}>
-            <option value="" disabled>
-              Select camera / lens
-            </option>
-            {lensOptions.map((option) => (
-              <option key={option} value={option}>
-                {option}
+            {position && (
+              <div className="upload__map">
+                <MapContainer center={position} zoom={14} style={{ height: "220px", width: "100%" }}>
+                  <TileLayer
+                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    attribution="&copy; OpenStreetMap contributors"
+                  />
+                  <Marker position={position} draggable eventHandlers={{ dragend: handleMarkerDrag }} />
+                  <RecenterMap position={position} />
+                </MapContainer>
+                <p className="upload__map-hint">Drag the pin to adjust</p>
+              </div>
+            )}
+
+            <p className="upload__label">Category</p>
+            <div className="upload__category-list">
+              {categories.map((cat) => (
+                <button
+                  key={cat}
+                  type="button"
+                  className={category === cat ? "upload__category active" : "upload__category"}
+                  onClick={() => setCategory(cat)}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
+
+            <button
+              type="button"
+              className="btn btn--primary upload__continue"
+              disabled={!position || !category}
+              onClick={() => setStep(3)}
+            >
+              Continue
+            </button>
+          </>
+        )}
+
+        {step === 3 && (
+          <>
+            <p className="upload__label">Date photo was taken</p>
+            <input
+              type="date"
+              className="upload__input"
+              value={photoDate}
+              onChange={(e) => setPhotoDate(e.target.value)}
+            />
+
+            <p className="upload__section-title">Weather (auto-filled)</p>
+            {weatherLoading && <p className="upload__label">Loading weather...</p>}
+            {!weatherLoading && weather && (
+              <div className="upload__weather-grid">
+                <div className="upload__weather-item">{weather.temperature}° {weather.condition}</div>
+                <div className="upload__weather-item">Wind {weather.windSpeed} mph</div>
+                <div className="upload__weather-item">Sunset {weather.sunset}</div>
+              </div>
+            )}
+            {!weatherLoading && !weather && (
+              <p className="upload__label">No weather data available for this date.</p>
+            )}
+
+            <p className="upload__section-title">Camera details</p>
+
+            <select className="upload__select" value={showLensOther ? OTHER_VALUE : cameraLens} onChange={handleLensChange}>
+              <option value="" disabled>
+                Select camera / lens
               </option>
-            ))}
-            <option value={OTHER_VALUE}>Other (add new)</option>
-          </select>
+              {lensOptions.map((option) => (
+                <option key={option} value={option}>
+                  {option}
+                </option>
+              ))}
+              <option value={OTHER_VALUE}>Other (add new)</option>
+            </select>
 
-          {showLensOther && (
-            <div className="upload__other-row">
-              <input
-                type="text"
-                className="upload__input"
-                placeholder="Type new camera / lens"
-                value={customLensInput}
-                onChange={(e) => setCustomLensInput(e.target.value)}
-              />
-              <button type="button" className="upload__add-btn" onClick={handleAddLens}>
-                Add
-              </button>
-            </div>
-          )}
+            {showLensOther && (
+              <div className="upload__other-row">
+                <input
+                  type="text"
+                  className="upload__input"
+                  placeholder="Type new camera / lens"
+                  value={customLensInput}
+                  onChange={(e) => setCustomLensInput(e.target.value)}
+                />
+                <button type="button" className="upload__add-btn" onClick={handleAddLens}>
+                  Add
+                </button>
+              </div>
+            )}
 
-          <select
-            className="upload__select"
-            value={showSettingsOther ? OTHER_VALUE : cameraSettings}
-            onChange={handleSettingsChange}
-          >
-            <option value="" disabled>
-              Select settings
-            </option>
-            {settingsOptions.map((option) => (
-              <option key={option} value={option}>
-                {option}
+            <select
+              className="upload__select"
+              value={showSettingsOther ? OTHER_VALUE : cameraSettings}
+              onChange={handleSettingsChange}
+            >
+              <option value="" disabled>
+                Select settings
               </option>
-            ))}
-            <option value={OTHER_VALUE}>Other (add new)</option>
-          </select>
+              {settingsOptions.map((option) => (
+                <option key={option} value={option}>
+                  {option}
+                </option>
+              ))}
+              <option value={OTHER_VALUE}>Other (add new)</option>
+            </select>
 
-          {showSettingsOther && (
-            <div className="upload__other-row">
-              <input
-                type="text"
-                className="upload__input"
-                placeholder="Type new settings (e.g. f/8 · 1/125 · ISO 100)"
-                value={customSettingsInput}
-                onChange={(e) => setCustomSettingsInput(e.target.value)}
-              />
-              <button type="button" className="upload__add-btn" onClick={handleAddSettings}>
-                Add
-              </button>
-            </div>
-          )}
+            {showSettingsOther && (
+              <div className="upload__other-row">
+                <input
+                  type="text"
+                  className="upload__input"
+                  placeholder="Type new settings (e.g. f/8 · 1/125 · ISO 100)"
+                  value={customSettingsInput}
+                  onChange={(e) => setCustomSettingsInput(e.target.value)}
+                />
+                <button type="button" className="upload__add-btn" onClick={handleAddSettings}>
+                  Add
+                </button>
+              </div>
+            )}
 
-          <p className="upload__section-title">Photo caption (optional)</p>
-          <textarea
-            className="upload__textarea"
-            placeholder="Add a short note about timing, setup, or camera settings..."
-            value={caption}
-            onChange={(e) => setCaption(e.target.value)}
-          />
+            <p className="upload__section-title">Photo caption (optional)</p>
+            <textarea
+              className="upload__textarea"
+              placeholder="Add a short note about timing, setup, or camera settings..."
+              value={caption}
+              onChange={(e) => setCaption(e.target.value)}
+            />
 
-          <button
-            type="button"
-            className="btn btn--primary upload__continue"
-            disabled={publishing}
-            onClick={handlePublish}
-          >
-            {publishing ? "Publishing..." : "Publish"}
-          </button>
-        </>
-      )}
-
-      <BottomNav />
+            <button
+              type="button"
+              className="btn btn--primary upload__continue"
+              disabled={publishing}
+              onClick={handlePublish}
+            >
+              {publishing ? "Publishing..." : "Publish"}
+            </button>
+          </>
+        )}
+      </div>
     </div>
   );
 }
