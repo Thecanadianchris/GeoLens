@@ -9,6 +9,7 @@ import api from "../api/axios";
 import BottomNav from "../components/BottomNav";
 import Header from "../components/Header"; 
 
+
 // import "./Home.scss";
 import {
   Bell,
@@ -407,7 +408,7 @@ function Home() {
         ) : (
           <>
             <div className="home__map z-index-0">
-              <MapContainer center={position} zoom={9} style={{ height: "440px", width: "100%", zIndex: 0 }}>
+              <MapContainer center={position} zoom={9} style={{ height: "300px", width: "100%", zIndex: 0 }}>
                 <TileLayer
                   url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                   attribution="&copy; OpenStreetMap contributors"
@@ -427,25 +428,34 @@ function Home() {
                 ))}
               </MapContainer>
             </div>
-
-            {bestSpots.length > 0 && (
-              <div className="home__section">
-                <p className="home__section-title">Today's best photography spots</p>
-                {bestSpots.map((photo) => (
-                  <div
-                    key={photo.id}
-                    className="home__best-row"
-                    onClick={() => navigate(`/photos/${photo.id}`)}
-                  >
-                    <p className="home__best-location">{photo.location}</p>
-                    <p className="home__best-meta">♥ {photo.likeCount || 0}</p>
+            <section className="panel mt-4 p-3" aria-label="Today's best photography spots">
+                {bestSpots.length > 0 && (
+                  <div className="home__section">
+                    <h2 className="m-title mb-3 text-[16px] font-semibold" style={{ fontFamily: "var(--font-display)" }}>
+                      Today's best photography spots
+                    </h2>
+                    {bestSpots.map((photo) => (
+                      <div
+                        key={photo.id}
+                        className="home__best-row"
+                        onClick={() => navigate(`/photos/${photo.id}`)}
+                      >
+                        <div className="flex gap-3">
+                        <p className="home__best-location">{photo.location}</p>   
+                        <div className="flex items-center gap-1">                     
+                        <p className="home__best-meta">♥ {photo.likeCount || 0}</p>
+                        </div>
+                        </div>
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
-            )}
+                )}
+              </section>
+
+          <div className="home__filter-row no-scrollbar flex gap-2.5 overflow-x-auto">
 
             {nearbyPhotos.length > 0 && (
-              <div className="home__section">
+              <div className="home__section mt-4 no-scrollbar" aria-label="Nearby photos">
                 <div className="home__section-header">
                   <p className="home__section-title">Nearby Photos</p>
                 </div>
@@ -464,9 +474,10 @@ function Home() {
                 </div>
               </div>
             )}
+            </div>
 
             {popularLocations.length > 0 && (
-              <div className="home__section">
+              <div className="home__section mt-4" aria-label="Popular locations">
                 <p className="home__section-title">Popular locations</p>
                 {popularLocations.map((item) => (
                   <div key={item.location} className="home__popular-row">
@@ -480,8 +491,9 @@ function Home() {
               </div>
             )}
 
+          <div className="home__filter-row no-scrollbar flex gap-2.5 overflow-x-auto">
             {recentlyAdded.length > 0 && (
-              <div className="home__section">
+              <div className="home__section mt-4" aria-label="Recently added photos">
                 <div className="home__section-header">
                   <p className="home__section-title">Recently Added Photos</p>
                 </div>
@@ -500,6 +512,7 @@ function Home() {
                 </div>
               </div>
             )}
+            </div>
           </>
         )}
       </div>

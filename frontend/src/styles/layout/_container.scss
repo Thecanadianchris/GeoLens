@@ -5,6 +5,8 @@
 // ==========================================================================
 
 // Page wrapper - keeps everything centred and phone width
+
+
 .page {
   max-width: $max-width;
   min-height: 100vh;
@@ -14,7 +16,7 @@
   // padding: $space-xl $space-lg;
   display: flex;
   flex-direction: column;
-  background: var(--paper);
+  background: var(--white);
   position: relative;
   box-shadow: 0 0 60px rgba(0, 0, 0, 0.45);
 }
@@ -30,3 +32,10 @@
   width: 100%;
   padding-inline: spacer(4);
 }
+
+ .panel {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+  }
+

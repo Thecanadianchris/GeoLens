@@ -1,6 +1,11 @@
 @use "../abstracts" as *;
 @use "material-icons/iconfont/material-icons.scss";
 
+@import "@fontsource/roboto/300.css";
+@import "@fontsource/roboto/400.css";
+@import "@fontsource/roboto/700.css";
+
+
 // ==========================================================================
 // Typography
 // ==========================================================================
@@ -10,7 +15,7 @@ body {
   font-size: $font-size-base;
   font-weight: $font-weight-normal;
   color: $color-text;
-  background: var(--ink);
+  background: var(white);
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -80,4 +85,11 @@ blockquote {
   border-left: 3px solid $color-border;
   color: $color-gray-600;
   font-style: italic;
+}
+
+.m-title {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-gray-900;
+  margin-bottom: spacer(3);
 }

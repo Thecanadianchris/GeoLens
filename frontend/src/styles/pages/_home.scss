@@ -32,10 +32,11 @@
   &__filter-chip {
     @include button-reset;
     padding: spacer(2) spacer(3);
-    border: $border-width solid $color-gray-300;
+    border: $border-width solid $color-gray-100;
     border-radius: $border-radius-full;
     font-size: $font-size-sm;
     color: $color-gray-500;
+    background: $color-gray-100;
     white-space: nowrap;
 
     &.active {
@@ -154,13 +155,13 @@
 
   &__section-header {
     @include flex(row, space-between, center);
-    margin-bottom: spacer(2);
+    margin-bottom: spacer(3);
   }
 
   &__section-title {
-    font-size: $font-size-sm;
+    font-size:  $font-size-lg;
     font-weight: $font-weight-semibold;
-    margin-bottom: spacer(2);
+    margin-bottom: spacer(3);
   }
 
   &__best-row,
@@ -179,7 +180,7 @@
 
   &__best-meta,
   &__popular-meta {
-    font-size: $font-size-sm;
+    font-size: .8rem;
     color: $color-gray-500;
   }
 
@@ -204,12 +205,15 @@
   }
 
   &__card-location {
-    font-size: $font-size-sm;
+    font-size: .755rem;
     font-weight: $font-weight-medium;
+    line-height: 1rem;
+    color: $color-gray-500;
+    margin-bottom: spacer(1);
   }
 
   &__card-score {
-    font-size: $font-size-sm;
+    font-size: .8rem;
     color: $color-gray-500;
   }
 
