@@ -39,8 +39,6 @@ export default function Header({ notifCount = 3, onOpenNotifications, onOpenSett
         >
         <FiSettings />
         </Link>
-         
-    
         </div>
       </div>
     </header>
